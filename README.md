@@ -1,5 +1,7 @@
 # **LSB**
 
+![Desktop Screenshot 2025 01 23 - 22 16 03 06](https://github.com/user-attachments/assets/e490af57-9fb1-421e-9cff-af28ff6d5c2b)
+
 This is a web application built with **Flask** that utilizes **Steganography** techniques to hide and extract text within images. The app works by manipulating the least significant bits (LSB) of the image’s pixel data, embedding the message you want to hide. Additionally, the app logs user information (like IP address and User-Agent) and allows an admin to view extracted texts from hidden messages.
 
 ### **Features:**
