@@ -119,7 +119,7 @@ Follow these instructions to run the project locally:
    - After clicking submit, you will receive a downloadable image with the embedded message.
 
 2. **Extracting Text from an Image**:
-   - Visit the "Decrypt" page.
+   -  Click on the "Decrypt" button.
    - Upload the image from which you want to extract the hidden text.
    - The app will extract the hidden text and display it to you.
 
