@@ -82,7 +82,7 @@ Follow these instructions to run the project locally:
 - **Description**: The homepage where user information is logged and the user can interact with the application.
 - **Function**: Logs IP address and User-Agent whenever a user visits the page.
 
-###**encrypt (Hide Text)**
+### **encrypt (Hide Text)**
 - **Method**: `POST`
 - **Description**: Upload an image and a text message to hide the text within the image.
 - **Parameters**:
@@ -90,7 +90,7 @@ Follow these instructions to run the project locally:
   - `text`: The text you want to embed in the image.
 - **Return**: The image with the embedded text (downloadable).
 
-###**decrypt (Extract Text)**
+### **decrypt (Extract Text)**
 - **Method**: `POST`
 - **Description**: Upload an image with hidden text and extract the message.
 - **Parameters**:
