@@ -101,11 +101,9 @@ Follow these instructions to run the project locally:
 
 ### **`/logs` (View Logs)**
 - **Description**: Displays the logs containing user information (IP addresses, User-Agent details).
-- **Access**: Available to all users.
 
 ### **`/admin` (Admin Panel)**
 - **Description**: Displays the hidden texts that were extracted from images by users.
-- **Access**: This page is meant for admin users only.
 
 ### **`/re`**
 - **Description**: A sample route with a simple response (not part of the core functionality).
