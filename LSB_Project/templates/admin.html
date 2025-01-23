@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم النظام</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+        
+        :root {
+            --primary: #3B82F6;
+            --secondary: #6366F1;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            min-height: 100vh;
+        }
+
+        .glass-effect {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+            z-index: 0;
+        }
+
+        .glow-effect {
+            position: relative;
+        }
+
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            z-index: -1;
+            border-radius: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .glow-effect:hover::after {
+            opacity: 0.5;
+        }
+
+        .action-button {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .action-button:hover::before {
+            width: 200%;
+            height: 200%;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- شريط التنقل العلوي -->
+    <nav class="glass-effect sticky top-0 z-50 py-4 px-6 mb-8">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+              
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                    MK System
+                </h1>
+
+                
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="relative">
+             
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="bg-gradient-to-r from-green-500 to-green-400 px-3 py-1 rounded-full text-sm">Admin</span>
+                    
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6">
+        <!-- الإحصائيات -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass-effect stats-card rounded-lg p-6 card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-gray-400 mb-2">إجمالي الصور المشفرة</h3>
+                        <p class="text-4xl font-bold text-white">262</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                        <i class="fas fa-images text-blue-500 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-green-400">
+                    <i class="fas fa-arrow-up mr-1"></i>
+                    <span>12.5%</span>
+                    <span class="text-gray-400 mr-2">مقارنة بالشهر السابق</span>
+                </div>
+            </div>
+
+            <div class="glass-effect stats-card rounded-lg p-6 card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-gray-400 mb-2">النصوص المخفية</h3>
+                        <p class="text-4xl font-bold text-white">262</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                        <i class="fas fa-file-alt text-purple-500 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-green-400">
+                    <i class="fas fa-arrow-up mr-1"></i>
+                    <span>12.5%</span>
+                    <span class="text-gray-400 mr-2">مقارنة بالأسبوع السابق</span>
+                </div>
+            </div>
+
+            <div class="glass-effect stats-card rounded-lg p-6 card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-gray-400 mb-2">المستخدمين النشطين</h3>
+                        <p class="text-4xl font-bold text-white">1</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center">
+                        <i class="fas fa-users text-green-500 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-red-400">
+                    <i class="fas fa-arrow-down mr-1"></i>
+                    <span>3.1%</span>
+                    <span class="text-gray-400 mr-2">مقارنة بالأمس</span>
+                </div>
+            </div>
+
+            <div class="glass-effect stats-card rounded-lg p-6 card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-gray-400 mb-2">معدل النجاح</h3>
+                        <p class="text-4xl font-bold text-white">99.8%</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-yellow-500/20 flex items-center justify-center">
+                        <i class="fas fa-chart-line text-yellow-500 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-green-400">
+                    <i class="fas fa-arrow-up mr-1"></i>
+                    <span>0.5%</span>
+                    <span class="text-gray-400 mr-2">مقارنة بآخر تحديث</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- الأقسام الرئيسية -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- قسم الصور المشفرة -->
+            <div class="glass-effect rounded-lg p-6 card">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold flex items-center">
+                        <i class="fas fa-shield-alt text-blue-400 mr-2"></i>
+                        الصور المشفرة
+                    </h2>
+                    <button class="action-button bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg flex items-center">
+                        <i class="fas fa-plus mr-2"></i>
+                        إضافة صورة
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="glass-effect rounded-lg p-4 flex items-center justify-between hover:bg-gray-800/50 transition-all">
+                        <div class="flex items-center">
+                           
+                            <div class="mr-4">
+                                <h3 class="font-semibold">secure_image_321.png</h3>
+                                <p class="text-sm text-gray-400">2.5 MB - تم التشفير منذ 5 دقائق</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="p-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-all">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-all">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- المزيد من الصور -->
+                </div>
+            </div>
+
+            <!-- قسم النصوص المخفية -->
+            <div class="glass-effect rounded-lg p-6 card">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold flex items-center">
+                        <i class="fas fa-file-alt text-purple-400 mr-2"></i>
+                        النصوص المخفية
+                    </h2>
+                    <button class="action-button bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-lg flex items-center">
+                        <i class="fas fa-plus mr-2"></i>
+                        إضافة نص
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="glass-effect rounded-lg p-4 hover:bg-gray-800/50 transition-all">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-semibold flex items-center">
+                                <i class="fas fa-lock text-yellow-400 mr-2"></i>
+                                    t45.txt
+                            </h3>
+                            <span class="text-sm bg-gray-700 px-2 py-1 rounded">67 حرف</span>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3">محتوى النص المخفي يظهر هنا...</p>
+                        <div class="flex justify-end space-x-2">
+                            <button class="px-3 py-1 bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 transition-all">
+                                عرض
+                            </button>
+                            <button class="px-3 py-1 bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 transition-all">
+                                حذف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- سجل العمليات والإعدادات -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+            <!-- سجل العمليات -->
+            <div class="glass-effect rounded-lg p-6 card">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-history text-green-400 mr-2"></i>
+                    سجل العمليات
+                </h2>
+                <div class="space-y-4">
+                    <div class="glass-effect rounded-lg p-4 flex items-center">
+                        <div class="w-3 h-3 rounded-full bg-green-500 mr-3"></div>
+                        <div class="flex-1">
+                            <p class="font-semibold">تم تشفير
+
+
+                                <div class="flex items-center">
+                                    <i class="fas fa-history text-green-400 mr-2"></i>
+                                    تم تشفير صورة جديدة بنجاح.
+                                </div>
+                                <div class="text-sm text-gray-400">تم التشفير باستخدام LSB - تمت إضافة رسالة مشفرة في الصورة</div>
+                            </div>
+                            <div class="glass-effect rounded-lg p-4 flex items-center">
+                                <div class="w-3 h-3 rounded-full bg-red-500 mr-3"></div>
+                                <div class="flex-1">
+                                    <p class="font-semibold">تم استخراج النص المخفي بنجاح</p>
+                                    <div class="text-sm text-gray-400">تم استخراج النص المخفي من الصورة وعرضه بنجاح.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- إعدادات النظام -->
+                    <div class="glass-effect rounded-lg p-6 card">
+                        <h2 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-cogs text-yellow-400 mr-2"></i>
+                            إعدادات النظام
+                        </h2>
+                        <form action="#" method="POST" class="space-y-4">
+                            <div>
+                                <label for="uploadLimit" class="block text-sm">حد رفع الصورة (MB)</label>
+                                <input type="number" id="uploadLimit" name="uploadLimit" value="10" class="bg-gray-700 rounded-lg p-3 text-white w-full">
+                            </div>
+                            <div>
+                                <label for="theme" class="block text-sm">وضع السمة</label>
+                                <select id="theme" name="theme" class="bg-gray-700 rounded-lg p-3 text-white w-full">
+                                    <option value="light">الفاتح</option>
+                                    <option value="dark" selected>الداكن</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="action-button bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg">
+                                    حفظ التغييرات
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="glass-effect rounded-lg p-6 card">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold flex items-center">
+                        <i class="fas fa-file-alt text-purple-400 mr-2"></i>
+                        النصوص المخفية
+                    </h2>
+                </div>
+                
+                <div class="space-y-4">
+                    {% for text in hidden_texts %}
+                        <div class="glass-effect rounded-lg p-4 hover:bg-gray-800/50 transition-all">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold flex items-center">
+                                    <i class="fas fa-lock text-yellow-400 mr-2"></i>
+                                    نص مخفي
+                                </h3>
+                        
+                            </div>
+                            <p class="text-sm text-gray-400 mb-3">{{ text }}</p>
+                            <div class="flex justify-end space-x-2">
+                            
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="text-gray-400">لا توجد نصوص مخفية حاليا.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+
+        
+        </body>
+        </html>
+        
