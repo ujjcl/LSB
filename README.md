@@ -1,4 +1,4 @@
-# **LSB**
+# **LSB Steganography**
 
 ![Desktop Screenshot 2025 01 23 - 22 16 03 06](https://github.com/user-attachments/assets/e490af57-9fb1-421e-9cff-af28ff6d5c2b)
 
