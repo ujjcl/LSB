@@ -21,6 +21,41 @@ Advanced image encryption system combining **LSB steganography** with **AES-256 
 
 ---
 
+
+
+## Troubleshooting: Keys with Unwanted Symbols (e.g., `_`, `-`)
+
+### ❌ Problem: Invalid Symbols in Key
+If your generated key contains symbols like `_` or `-` (which are **not allowed** in Fernet keys), follow these steps:
+
+### 🔍 Cause
+- **Encoding Issue**: While Fernet keys use Base64 encoding (allowed chars: `A-Z, a-z, 0-9, +, /, =`), some systems may incorrectly display/encode characters.
+- **Manual Modification**: Accidentally typing/editing the key.
+
+### 🛠 Solution: Regenerate Until Valid
+1. **Via Web Interface**:
+   - Go to `/key` route:  
+     ```bash
+     http://localhost:5000/key
+     ```
+   - Refresh **the page"** repeatedly until you get a valid key like:  
+     ```
+     tyIKetCBoITu82wJ4rN3ryzIWlKvB3EMcRC38jYVKbM=
+     ```
+
+   ```
+
+### ✅ Valid Key Example
+```
+AValidKey1234567890ABCDEFGHIJKLpMNOPQRSTUVWXYZ=
+```
+
+### 📝 Note
+- Fernet keys **never** contain `_` or `-` by design. If you see these, your system may have encoding issues.
+- Always use the **COPY** button – never edit keys manually.
+
+---
+
 ## Key Features
 - **Military-Grade Encryption**: AES-256 with 44-character Base64 keys.
 - **Secure Key Management**: Keys are generated cryptographically and **never stored**.
