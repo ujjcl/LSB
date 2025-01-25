@@ -40,7 +40,7 @@ Advanced image encryption system combining **LSB steganography** with **AES-256 
 1. Clone the repository:
    ```bash
    git clone https://github.com/ujjcl/LSB.git
-   cd image-encryption-lsb
+   cd LSBProject2.0
    ```
 
 
