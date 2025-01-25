@@ -43,7 +43,7 @@ If your generated key contains symbols like `_` or `-` (which are **not allowed*
      tyIKetCBoITu82wJ4rN3ryzIWlKvB3EMcRC38jYVKbM=
      ```
 
-   ```
+   
 
 ### ✅ Valid Key Example
 ```
