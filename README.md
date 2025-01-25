@@ -1,4 +1,3 @@
-```markdown
 # Image Encryption Using LSB Technique with AES-256 and Cryptographic Randomization
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
@@ -8,6 +7,15 @@
 
 Advanced image encryption system combining **LSB steganography** with **AES-256 encryption** and cryptographic randomization.  
 **WARNING: Losing the encryption key will result in permanent data loss!** 🔐
+**1.0**
+![Desktop Screenshot 2025 01 23 - 22 16 03 06](https://github.com/user-attachments/assets/d0c3fe4a-6435-4cec-8f5b-19330e3e87bc)
+
+**2.0**
+![Desktop Screenshot 2025 01 25 - 04 44 49 89](https://github.com/user-attachments/assets/0151aca7-078c-4b7f-982b-0f290fe9c5b3)
+
+![Desktop Screenshot 2025 01 25 - 04 39 10 57](https://github.com/user-attachments/assets/d57e7010-bca3-4373-b7d3-71a70804a9f6)
+
+![Desktop Screenshot 2025 01 25 - 04 36 31 03](https://github.com/user-attachments/assets/b3e970f8-a6e6-450f-a5d7-fb3964af29cd)
 
 ---
 
@@ -32,16 +40,6 @@ Advanced image encryption system combining **LSB steganography** with **AES-256 
    git clone https://github.com/ujjcl/LSB.git
    cd image-encryption-lsb
    ```
-
-**1.0**
-![Desktop Screenshot 2025 01 23 - 22 16 03 06](https://github.com/user-attachments/assets/d0c3fe4a-6435-4cec-8f5b-19330e3e87bc)
-
-**2.0**
-![Desktop Screenshot 2025 01 25 - 04 44 49 89](https://github.com/user-attachments/assets/0151aca7-078c-4b7f-982b-0f290fe9c5b3)
-
-![Desktop Screenshot 2025 01 25 - 04 39 10 57](https://github.com/user-attachments/assets/d57e7010-bca3-4373-b7d3-71a70804a9f6)
-
-![Desktop Screenshot 2025 01 25 - 04 36 31 03](https://github.com/user-attachments/assets/b3e970f8-a6e6-450f-a5d7-fb3964af29cd)
 
 
 2. Install dependencies:
