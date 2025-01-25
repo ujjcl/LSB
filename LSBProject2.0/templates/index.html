@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إخفاء النصوص في الصور</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4f46e5, #3b82f6);
+            --secondary-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .input-field {
+            background: rgba(30, 41, 59, 0.4) !important;
+            border: 2px dashed #818cf8 !important;
+        }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text text-transparent">
+            نظام الإخفاء الآمن باستخدام LSB
+        </h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- قسم التشفير -->
+            <div class="glass-card rounded-2xl p-8">
+                <h2 class="text-2xl font-bold mb-6 text-indigo-300">
+                    <i class="fas fa-lock ml-2"></i>
+                    تشفير النص
+                </h2>
+                
+                <form action="/encrypt" method="POST" enctype="multipart/form-data">
+                    <div class="mb-6">
+                        <label class="block text-lg mb-2">
+                            <i class="fas fa-image ml-2"></i>
+                            اختر الصورة الأصلية
+                        </label>
+                        <div class="input-field rounded-xl p-4 cursor-pointer" 
+                             onclick="document.getElementById('encrypt-image').click()">
+                            <div class="text-center text-gray-400">
+                                اسحب الصورة هنا أو اضغط للاختيار
+                            </div>
+                            <input type="file" id="encrypt-image" name="image" accept="image/*" class="hidden" required>
+                        </div>
+                        <div id="encrypt-preview" class="mt-4 rounded-lg overflow-hidden"></div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-lg mb-2">
+                            <i class="fas fa-key ml-2"></i>
+                            المفتاح السري (44 حرفًا base64)
+                        </label>
+                        <input 
+                            type="password" 
+                            name="key" 
+                            class="w-full bg-gray-700 text-white p-3 rounded-lg"
+                            placeholder="أدخل مفتاح Fernet صالح"
+                            minlength="44" 
+                            maxlength="44" 
+                            required
+                            pattern="[A-Za-z0-9+/=]{44}"
+                            title="مثال: jX2pK5L9RqZvBtGyVnYr4wTfWmSdPh6E"
+                        >
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-lg mb-2">
+                            <i class="fas fa-font ml-2"></i>
+                            النص المراد إخفاؤه
+                        </label>
+                        <textarea 
+                            name="text" 
+                            class="w-full bg-gray-700 text-white p-3 rounded-lg"
+                            rows="4"
+                            placeholder="اكتب النص السري هنا..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-lg transition-all"
+                    >
+                        <i class="fas fa-shield-alt ml-2"></i>
+                        تشفير النص
+                    </button>
+                </form>
+            </div>
+
+            <!-- قسم فك التشفير -->
+            <div class="glass-card rounded-2xl p-8">
+                <h2 class="text-2xl font-bold mb-6 text-indigo-300">
+                    <i class="fas fa-unlock ml-2"></i>
+                    فك التشفير
+                </h2>
+                
+                <form action="/decrypt" method="POST" enctype="multipart/form-data">
+                    <div class="mb-6">
+                        <label class="block text-lg mb-2">
+                            <i class="fas fa-image ml-2"></i>
+                            اختر الصورة المشفرة
+                        </label>
+                        <div class="input-field rounded-xl p-4 cursor-pointer" 
+                             onclick="document.getElementById('decrypt-image').click()">
+                            <div class="text-center text-gray-400">
+                                اسحب الصورة هنا أو اضغط للاختيار
+                            </div>
+                            <input type="file" id="decrypt-image" name="image" accept="image/*" class="hidden" required>
+                        </div>
+                        <div id="decrypt-preview" class="mt-4 rounded-lg overflow-hidden"></div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-lg mb-2">
+                            <i class="fas fa-key ml-2"></i>
+                            المفتاح السري
+                        </label>
+                        <input 
+                            type="password" 
+                            name="key" 
+                            class="w-full bg-gray-700 text-white p-3 rounded-lg"
+                            placeholder="أدخل المفتاح المستخدم في التشفير"
+                            required
+                        >
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-lg transition-all"
+                    >
+                        <i class="fas fa-search ml-2"></i>
+                        استخراج النص
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+<!-- قسم عرض النتيجة -->
+{% if decrypted_text or error %}
+<div class="glass-card rounded-2xl p-8 mt-8">
+    <h2 class="text-2xl font-bold mb-4 text-indigo-300">
+        <i class="fas fa-scroll ml-2"></i>
+        النتيجة
+    </h2>
+    
+    {% if decrypted_text %}
+    <div class="bg-green-900/20 p-4 rounded-lg mb-4">
+        <p class="break-words">{{ decrypted_text }}</p>
+    </div>
+    {% endif %}
+    
+    {% if error %}
+    <div class="bg-red-900/20 p-4 rounded-lg mb-4">
+        <p class="text-red-400">{{ error }}</p>
+    </div>
+    {% endif %}
+    
+    <button 
+        onclick="window.location.href='/'" 
+        class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg"
+    >
+        <i class="fas fa-sync-alt ml-2"></i> تحديث
+    </button>
+</div>
+{% endif %}
+    <!-- Scripts -->
+    <script>
+        function handleFile(file, type) {
+            const preview = document.querySelector(`#${type}-preview`);
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                preview.innerHTML = `
+                    <img src="${e.target.result}" 
+                         class="w-full h-64 object-contain"
+                         alt="معاينة الصورة">
+                `;
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // إدارة تحميل الصور
+        ['encrypt', 'decrypt'].forEach(type => {
+            document.getElementById(`${type}-image`).addEventListener('change', (e) => {
+                if (e.target.files[0]) handleFile(e.target.files[0], type);
+            });
+        });
+
+        // إدارة السحب والإفلات
+        document.querySelectorAll('.input-field').forEach(element => {
+            element.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                element.style.borderColor = '#818cf8';
+            });
+
+            element.addEventListener('dragleave', () => {
+                element.style.borderColor = '#818cf8';
+            });
+
+            element.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const files = e.dataTransfer.files;
+                if (files[0]) handleFile(files[0], element.id.split('-')[0]);
+            });
+        });
+    </script>
+</body>
+</html>
