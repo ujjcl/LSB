@@ -7,6 +7,8 @@
 
 Advanced image encryption system combining **LSB steganography** with **AES-256 encryption** and cryptographic randomization.  
 **WARNING: Losing the encryption key will result in permanent data loss!** 🔐
+---
+
 **1.0**
 ![Desktop Screenshot 2025 01 23 - 22 16 03 06](https://github.com/user-attachments/assets/d0c3fe4a-6435-4cec-8f5b-19330e3e87bc)
 
