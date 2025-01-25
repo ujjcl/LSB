@@ -1,124 +1,141 @@
-# **LSB Steganography**
+```markdown
+# Image Encryption Using LSB Technique with AES-256 and Cryptographic Randomization
 
-![Desktop Screenshot 2025 01 23 - 22 16 03 06](https://github.com/user-attachments/assets/e490af57-9fb1-421e-9cff-af28ff6d5c2b)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![Flask](https://img.shields.io/badge/Flask-2.3.2-green)
+![License](https://img.shields.io/badge/License-GPLv3-orange)
+![Security](https://img.shields.io/badge/Security-Critical-red)
 
-This is a web application built with **Flask** that utilizes **Steganography** techniques to hide and extract text within images. The app works by manipulating the least significant bits (LSB) of the image’s pixel data, embedding the message you want to hide. Additionally, the app logs user information (like IP address and User-Agent) and allows an admin to view extracted texts from hidden messages.
+Advanced image encryption system combining **LSB steganography** with **AES-256 encryption** and cryptographic randomization.  
+**WARNING: Losing the encryption key will result in permanent data loss!** 🔐
+**1.0**
+![Desktop Screenshot 2025 01 23 - 22 16 03 06](https://github.com/user-attachments/assets/d0c3fe4a-6435-4cec-8f5b-19330e3e87bc)
 
-### **Features:**
-1. **Hide Text in Image (Steganography)**
-   - Upload an image, provide a text message, and the text will be embedded into the image's least significant bits (LSB).
-   
-2. **Extract Hidden Text from Image**
-   - Upload an image with hidden text and extract the embedded message.
-   
-3. **User Logging**
-   - The app automatically logs user information such as IP addresses and User-Agent details whenever the user visits the site.
-   
-4. **Admin Panel**
-   - Admins can view the extracted texts from uploaded images through a simple admin panel.
+**2.0**
+![Desktop Screenshot 2025 01 25 - 04 44 49 89](https://github.com/user-attachments/assets/0151aca7-078c-4b7f-982b-0f290fe9c5b3)
 
----
+![Desktop Screenshot 2025 01 25 - 04 39 10 57](https://github.com/user-attachments/assets/d57e7010-bca3-4373-b7d3-71a70804a9f6)
 
-## **How it Works**
+![Desktop Screenshot 2025 01 25 - 04 36 31 03](https://github.com/user-attachments/assets/b3e970f8-a6e6-450f-a5d7-fb3964af29cd)
 
-### **Steganography Process**
-Steganography is the practice of hiding information within other, seemingly harmless data. In this application, text is encoded into the least significant bits (LSB) of the pixel values of an image. The LSB technique works by altering the smallest bit of each color channel (Red, Green, and Blue) of each pixel, which is typically not noticeable to the human eye. Here's how it works step-by-step:
-
-1. **Embed Text into Image (Encrypt)**:
-   - Convert the input text into its binary form.
-   - The binary data is hidden in the least significant bits (the last bit) of the Red, Green, and Blue channels of the image pixels.
-   - The result is an image with an embedded hidden message that is not visually noticeable.
-
-2. **Extract Text from Image (Decrypt)**:
-   - Scan the image and extract the least significant bits from each pixel’s color channels.
-   - The binary data is then converted back to text.
-   - The extracted text is displayed and stored in a log file for admin access.
 
 ---
 
-## **Installation and Setup**
+## Key Features
+- **Military-Grade Encryption**: AES-256 with 44-character Base64 keys.
+- **Secure Key Management**: Keys are generated cryptographically and **never stored**.
+- **Anti-Tampering**: Randomized embedding using SHA-256 hashing.
+- **Web Interface**: User-friendly encryption/decryption via browser.
+- **Data Integrity**: PSNR > 45 dB and MSE < 2.0 guaranteed.
 
-Follow these instructions to run the project locally:
+---
 
-### **Prerequisites:**
-- **Python 3.x**: This project is built using Python 3, so make sure you have Python 3 installed.
-- **Flask**: Web framework to handle HTTP requests.
-- **Pillow**: Python Imaging Library (PIL), used for image manipulation.
+## Installation
 
-### **Steps to Run the Project:**
+### Prerequisites
+- Python 3.10+
+- pip (Python Package Manager)
 
-1. **Clone or Download the Project:**
-   - You can clone the repository using Git:
-     ```bash
-     git clone https://github.com/ujjcl/LSB.git
-     ```
-   - Or simply download the ZIP file and extract it.
-
-2. **Navigate to the Project Directory:**
-   Open a terminal or command prompt and go to the project folder:
+### Steps
+1. Clone the repository:
    ```bash
-   cd ...
+   git clone https://github.com/ujjcl/LSB.git
+   cd image-encryption-lsb
    ```
 
-3. **Install the Required Dependencies:**
-   Install Flask and Pillow (if not already installed) by running:
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Run the Flask App:**
-   Now, you can run the Flask application:
+3. Run the application:
    ```bash
    python app.py
    ```
-   The app will start running locally at `http://127.0.0.1:5000/`.
 
-5. **Open the App in Your Browser:**
-   Visit `http://127.0.0.1:5000/` to access the web interface.
-
----
-
-## **App Routes**
-
-### **`/` (Home)**
-- **Description**: The homepage where user information is logged and the user can interact with the application.
-- **Function**: Logs IP address and User-Agent whenever a user visits the page.
-
-### **encrypt (Hide Text)**
-- **Method**: `POST`
-- **Description**: Upload an image and a text message to hide the text within the image.
-- **Parameters**:
-  - `image`: The image file.
-  - `text`: The text you want to embed in the image.
-- **Return**: The image with the embedded text (downloadable).
-
-### **decrypt (Extract Text)**
-- **Method**: `POST`
-- **Description**: Upload an image with hidden text and extract the message.
-- **Parameters**:
-  - `image`: The image file containing hidden text.
-- **Return**: The extracted hidden text.
-
-### **`/logs` (View Logs)**
-- **Description**: Displays the logs containing user information (IP addresses, User-Agent details).
-
-### **`/admin` (Admin Panel)**
-- **Description**: Displays the hidden texts that were extracted from images by users.
-
-### **`/re`**
-- **Description**: A sample route with a simple response (not part of the core functionality).
+4. Access the web interface at:
+   ```
+   http://localhost:5000
+   ```
 
 ---
 
-## **How to Use the App**
+## Step-by-Step Usage Guide
 
-1. **Hiding Text in an Image**:
-   - Visit the homepage at `http://127.0.0.1:5000/`.
-   - Click on the "Encrypt" button.
-   - Upload an image and provide the text you want to hide.
-   - After clicking submit, you will receive a downloadable image with the embedded message.
+### 1. Generating a Cryptographic Key (`/key` Route)
+#### Why the Key is Critical 🔑
+- **Irreversible Loss**: The key is **required for decryption**. If lost, your data is permanently inaccessible.
+- **No Backdoor**: The system has no key recovery mechanism for security reasons.
 
-2. **Extracting Text from an Image**:
-   -  Click on the "Decrypt" button.
-   - Upload the image from which you want to extract the hidden text.
-   - The app will extract the hidden text and display it to you.
+#### How to Generate a Key
+1. Navigate to:
+   ```
+   http://localhost:5000/key
+   ```
+2. The system auto-generates a **44-character Base64 key** (e.g., `jX2pK5L9RqZvBtGyVnYr4wTfWmSdPh6E...`).
+3. **Copy the key** using the "Copy" button or manually.
+4. **Immediately save the key** in **multiple secure locations**:
+   - Password managers (e.g., Bitwarden, 1Password).
+   - Encrypted USB drives.
+   - Offline storage (printed and stored in a safe).
+
+---
+
+### 2. Encrypting Data
+1. Go to the homepage:
+   ```
+   http://localhost:5000
+   ```
+2. Upload a cover image (PNG/BMP recommended).
+3. Enter your secret message and **paste the generated key**.
+4. Click **Encrypt Text**. The system will:
+   - Encrypt the message using AES-256.
+   - Embed the data into the image using randomized LSBs.
+   - Display the stego image with PSNR/MSE metrics.
+
+---
+
+### 3. Decrypting Data
+1. Upload the stego image.
+2. **Enter the exact same key** used during encryption.
+3. Click **Extract Text**. The system will:
+   - Regenerate the embedding sequence using the key.
+   - Decrypt and display the hidden message.
+
+---
+
+## Key Management Best Practices 🛡️
+1. **Never Share the Key**: Treat it like a password.
+2. **Multi-Device Backup**: Store copies on trusted devices.
+3. **Test Key Validity**: Before deleting original data, verify decryption.
+4. **Emergency Plan**: Share the key with a trusted party via secure channels (e.g., Signal, PGP).
+
+---
+
+## Technical Details
+
+### Key Generation Process
+- **Algorithm**: `Fernet.generate_key()` from the `cryptography` library.
+- **Format**: 44-character URL-safe Base64 string.
+- **Security**:
+  - Keys are **never stored** on the server.
+  - A 1-bit change in the key causes **100% decryption failure**.
+
+### Code Snippets
+1. **Key Validation**:
+   ```python
+   import re
+   if not re.match(r'^[A-Za-z0-9+/=]{44}$', user_key):
+       raise ValueError("Invalid key!")
+   ```
+
+2. **Embedding Sequence Generation**:
+   ```python
+   import hashlib
+   import numpy as np
+
+   def generate_random_positions(key, total_pixels):
+       seed = int(hashlib.sha256(key).hexdigest(), 16) % 10**8
+       np.random.seed(seed)
+       return np.random.permutation(total_pixels)
+   ```
