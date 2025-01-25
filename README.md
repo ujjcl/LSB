@@ -38,7 +38,7 @@ If your generated key contains symbols like `_` or `-` (which are **not allowed*
      ```bash
      http://localhost:5000/key
      ```
-   - Refresh **the page"** repeatedly until you get a valid key like:  
+   - Refresh **the page** repeatedly until you get a valid key like:  
      ```
      tyIKetCBoITu82wJ4rN3ryzIWlKvB3EMcRC38jYVKbM=
      ```
