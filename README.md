@@ -51,7 +51,6 @@ AValidKey1234567890ABCDEFGHIJKLpMNOPQRSTUVWXYZ=
 ```
 
 ### 📝 Note
-- Fernet keys **never** contain `_` or `-` by design. If you see these, your system may have encoding issues.
 - Always use the **COPY** button – never edit keys manually.
 
 ---
