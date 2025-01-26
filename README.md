@@ -31,7 +31,7 @@ Advanced image encryption system combining **LSB steganography** with **AES-256 
 
 ![Screenshot (145)](https://github.com/user-attachments/assets/fe5a6424-e502-471b-9502-8a8735df2be6)
 
-![Screenshot (143)](https://github.com/user-attachments/assets/4fe963c1-4a2c-4d01-9ccb-7042b1c90bff)
+![Screenshot (147)](https://github.com/user-attachments/assets/a086dd4c-a07c-4ec9-b2c9-902000c36092)
 
 ![Screenshot (141)](https://github.com/user-attachments/assets/93ee2654-36aa-4751-85d4-f789120a88f6)
 
