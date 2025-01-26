@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المفتاح</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #3b82f6);
+            --dark-background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--dark-background);
+            min-height: 100vh;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 40px rgba(31, 38, 135, 0.2);
+        }
+
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="container mx-auto max-w-3xl">
+        <!-- شريط العودة -->
+        <div class="mb-6">
+            <a href="/" 
+            class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
+                   rounded-lg hover:opacity-90 transition-all">
+             <i class="fas fa-arrow-left ml-2"></i>
+             العودة 
+         </a>
+        </div>
+
+        <!-- بطاقة المفتاح الرئيسية -->
+        <div class="glass-panel p-8 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold gradient-text mb-2">
+                        <i class="fas fa-key ml-2"></i>
+                        المفتاح السري الخاص بك
+                    </h1>
+                    <p class="text-indigo-300 text-sm">تم الإنشاء: {{ timestamp }}</p>
+                </div>
+                <div class="w-14 h-14 bg-indigo-900/20 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-lock fa-xl text-indigo-400"></i>
+                </div>
+            </div>
+
+            <!-- منطقة المفتاح -->
+            <div class="group relative mb-6">
+                <div class="flex items-center justify-between bg-indigo-900/20 p-4 rounded-xl">
+                    <code id="key-text" class="text-lg font-mono break-all text-indigo-300 pr-2">{{ key }}</code>
+                    <button 
+                        onclick="copyKey()"
+                        class="w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-600 hover:bg-indigo-700 transition-all"
+                        title="نسخ المفتاح"
+                    >
+                        <i class="fas fa-copy text-xl text-white"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم التعليمات -->
+        <div class="glass-panel p-8">
+            <div class="flex items-center gap-4 mb-6">
+                <i class="fas fa-exclamation-circle text-2xl text-yellow-400"></i>
+                <h2 class="text-2xl font-bold  text-yellow-400">تعليمات هامة</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- التعليمات  -->
+                <div class="flex items-start gap-4">
+                    <div class="w-8 flex-shrink-0">
+                        <div class="h-2 w-2 bg-yellow-400 rounded-full mt-3 animate-pulse"></div>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-yellow-400 font-medium">{{ instruction2 }}</p>
+                       
+                    </div>
+                </div>
+          
+                <!-- التحذيرات -->
+                <div class="flex items-start gap-4">
+                    <div class="w-8 flex-shrink-0">
+                        <div class="h-2 w-2 bg-red-500 rounded-full mt-3 animate-pulse"></div>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-red-500 font-medium">{{ warning }}</p>
+                       
+                    </div>
+                </div>
+               
+                
+            
+            </div>
+        </div>
+    </div>
+
+    <!-- إشعار النسخ -->
+    <div id="copy-notification" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-indigo-700 px-6 py-3 rounded-full opacity-0 transition-all duration-300 shadow-xl text-sm flex items-center gap-2">
+        <i class="fas fa-check-circle"></i>
+        <span>تم النسخ بنجاح!</span>
+    </div>
+
+    <script>
+        function copyKey() {
+            const keyText = document.getElementById('key-text');
+            const tempTextArea = document.createElement('textarea');
+            
+            tempTextArea.value = keyText.innerText;
+            document.body.appendChild(tempTextArea);
+            
+            // للأجهزة المحمولة
+            tempTextArea.select();
+            tempTextArea.setSelectionRange(0, 99999);
+            
+            // محاولة النسخ باستخدام الطريقتين
+            try {
+                // الطريقة الحديثة
+                navigator.clipboard.writeText(keyText.innerText).then(() => {
+                    showNotification(true);
+                }).catch(() => {
+                    // الطريقة القديمة إذا فشلت
+                    document.execCommand('copy');
+                    showNotification(true);
+                });
+            } catch (err) {
+                // الطريقة البديلة
+                document.execCommand('copy');
+                showNotification(true);
+            } finally {
+                document.body.removeChild(tempTextArea);
+                addButtonEffect();
+            }
+        }
+    
+        function addButtonEffect() {
+            const btn = document.querySelector('button[title="نسخ المفتاح"]');
+            btn.classList.add('animate-pulse');
+            setTimeout(() => {
+                btn.classList.remove('animate-pulse');
+            }, 500);
+        }
+    
+        function showNotification(success) {
+            const notification = document.getElementById('copy-notification');
+            notification.textContent = success ? 'تم النسخ بنجاح!' : 'فشل النسخ! حاول مرة أخرى';
+            notification.style.backgroundColor = success ? '#4f46e5' : '#ef4444';
+            
+            notification.style.opacity = '1';
+            notification.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(0)';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
