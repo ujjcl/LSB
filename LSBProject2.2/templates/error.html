@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطأ</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #3b82f6);
+            --dark-background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--dark-background);
+            min-height: 100vh;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            box-shadow: 0 10px 40px rgba(31, 38, 135, 0.4);
+            border-radius: 1.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="container mx-auto max-w-4xl">
+        <div class="glass-panel p-8">
+            <!-- الهيدر -->
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-14 h-14 bg-red-900/30 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-exclamation-triangle text-2xl text-red-400"></i>
+                </div>
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-red-400 to-rose-400 bg-clip-text text-red-400">
+                     خطأ
+                </h1>
+            </div>
+
+            <!-- محتوى الخطأ -->
+            <div class="space-y-6">
+                <div class="bg-red-900/20 p-6 rounded-xl border border-red-800/30">
+                    <p class="text-red-400 text-lg mb-4">{{ message }}</p>
+                    
+                    <div class="space-y-3 text-sm">
+                        <p class="text-yellow-400">
+                            السبب غالبًا ان المفتاح يحتوي على هذه الرموز (  -   _  ) 
+                            </p>
+                        <p class="text-">لإنشاء مفتاح صالح:</p>
+                        <p>    </p>
+                        <code class="bg-gray-700 p-1 rounded text-gray-400">python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"</code>
+                    </div>
+                </div>
+
+                <!-- زر العودة -->
+                <a href="/" 
+                   class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
+                          rounded-lg hover:opacity-90 transition-all">
+                    <i class="fas fa-arrow-left ml-2"></i>
+                    العودة 
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
