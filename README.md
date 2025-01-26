@@ -26,39 +26,7 @@ Advanced image encryption system combining **LSB steganography** with **AES-256 
 
 ![Screenshot (136)](https://github.com/user-attachments/assets/b391e985-c14e-42b0-82f3-80bfd8c0a00a)
 
----
 
-
-
-## Troubleshooting: Keys with Unwanted Symbols (e.g., `_`, `-`)
-
-### ❌ Problem: Invalid Symbols in Key
-If your generated key contains symbols like `_` or `-` (which are **not allowed** in Fernet keys), follow these steps:
-
-### 🔍 Cause
-- **Encoding Issue**: While Fernet keys use Base64 encoding (allowed chars: `A-Z, a-z, 0-9, +, /, =`), some systems may incorrectly display/encode characters.
-- **Manual Modification**: Accidentally typing/editing the key.
-
-### 🛠 Solution: Regenerate Until Valid
-1. **Via Web Interface**:
-   - Go to `/key` route:  
-     ```bash
-     http://localhost:5000/key
-     ```
-   - Refresh **the page** repeatedly until you get a valid key like:  
-     ```
-     tyIKetCBoITu82wJ4rN3ryzIWlKvB3EMcRC38jYVKbM=
-     ```
-
-   
-
-### ✅ Valid Key Example
-```
-AValidKey1234567890ABCDEFGHIJKLpMNOPQRSTUVWXYZ=
-```
-
-### 📝 Note
-- Always use the **COPY** button – never edit keys manually.
 
 ---
 
@@ -152,32 +120,37 @@ AValidKey1234567890ABCDEFGHIJKLpMNOPQRSTUVWXYZ=
 3. **Test Key Validity**: Before deleting original data, verify decryption.
 4. **Emergency Plan**: Share the key with a trusted party via secure channels (e.g., Signal, PGP).
 
----
+   
+   ---
 
-## Technical Details
 
-### Key Generation Process
-- **Algorithm**: `Fernet.generate_key()` from the `cryptography` library.
-- **Format**: 44-character URL-safe Base64 string.
-- **Security**:
-  - Keys are **never stored** on the server.
-  - A 1-bit change in the key causes **100% decryption failure**.
 
-### Code Snippets
-1. **Key Validation**:
-   ```python
-   import re
-   if not re.match(r'^[A-Za-z0-9+/=]{44}$', user_key):
-       raise ValueError("Invalid key!")
-   ```
+## Troubleshooting: Keys with Unwanted Symbols (e.g., `_`, `-`)
 
-2. **Embedding Sequence Generation**:
-   ```python
-   import hashlib
-   import numpy as np
+### ❌ Problem: Invalid Symbols in Key
+If your generated key contains symbols like `_` or `-` (which are **not allowed** in Fernet keys), follow these steps:
 
-   def generate_random_positions(key, total_pixels):
-       seed = int(hashlib.sha256(key).hexdigest(), 16) % 10**8
-       np.random.seed(seed)
-       return np.random.permutation(total_pixels)
-   ```
+### 🔍 Cause
+- **Encoding Issue**: While Fernet keys use Base64 encoding (allowed chars: `A-Z, a-z, 0-9, +, /, =`), some systems may incorrectly display/encode characters.
+- **Manual Modification**: Accidentally typing/editing the key.
+
+### 🛠 Solution: Regenerate Until Valid
+1. **Via Web Interface**:
+   - Go to `/key` route:  
+     ```bash
+     http://localhost:5000/key
+     ```
+   - Refresh **the page** repeatedly until you get a valid key like:  
+     ```
+     tyIKetCBoITu82wJ4rN3ryzIWlKvB3EMcRC38jYVKbM=
+     ```
+
+   
+
+### ✅ Valid Key Example
+```
+AValidKey1234567890ABCDEFGHIJKLpMNOPQRSTUVWXYZ=
+```
+
+### 📝 Note
+- Always use the **COPY** button – never edit keys manually.
