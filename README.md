@@ -119,16 +119,10 @@ Advanced image encryption system combining **LSB steganography** with **AES-256 
    - Regenerate the embedding sequence using the key.
    - Decrypt and display the hidden message.
 
+
 ---
 
-## Key Management Best Practices 🛡️
-1. **Never Share the Key**: Treat it like a password.
-2. **Multi-Device Backup**: Store copies on trusted devices.
-3. **Test Key Validity**: Before deleting original data, verify decryption.
-4. **Emergency Plan**: Share the key with a trusted party via secure channels (e.g., Signal, PGP).
 
-   
-   ---
 
 
 
