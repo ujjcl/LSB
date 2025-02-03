@@ -9,24 +9,24 @@ Advanced image encryption system combining **LSB steganography** with **AES-256 
 **WARNING: Losing the encryption key will result in permanent data loss!** 
 ---
 
-# **1.0 (Basic LSB)**
+## **1.0 (Basic LSB)**
 ![Desktop Screenshot 2025 01 23 - 22 16 03 06](https://github.com/user-attachments/assets/d0c3fe4a-6435-4cec-8f5b-19330e3e87bc)
 
-# **2.0 (LSB with AES-256 encryption and cryptographic randomization)**
+## **2.0 (LSB with AES-256 encryption and cryptographic randomization)**
 ![Desktop Screenshot 2025 01 25 - 04 44 49 89](https://github.com/user-attachments/assets/0151aca7-078c-4b7f-982b-0f290fe9c5b3)
 
 ![Desktop Screenshot 2025 01 25 - 04 39 10 57](https://github.com/user-attachments/assets/d57e7010-bca3-4373-b7d3-71a70804a9f6)
 
 ![Desktop Screenshot 2025 01 25 - 04 36 31 03](https://github.com/user-attachments/assets/b3e970f8-a6e6-450f-a5d7-fb3964af29cd)
 
-# **2.1**
+## **2.1**
 ![Screenshot (140)](https://github.com/user-attachments/assets/79946296-0e78-4e8e-a7ba-14e015599bfa)
 
 ![Screenshot (137)](https://github.com/user-attachments/assets/350c216f-ff66-4ca7-8028-5889435219b8)
 
 ![Screenshot (136)](https://github.com/user-attachments/assets/b391e985-c14e-42b0-82f3-80bfd8c0a00a)
 
-# **2.2**
+## **2.2**
 ![Screenshot (146)](https://github.com/user-attachments/assets/06899bdb-e130-4a81-aad3-0debd8fbca4d)
 
 ![Screenshot (145)](https://github.com/user-attachments/assets/fe5a6424-e502-471b-9502-8a8735df2be6)
@@ -34,6 +34,11 @@ Advanced image encryption system combining **LSB steganography** with **AES-256 
 ![Screenshot (147)](https://github.com/user-attachments/assets/a086dd4c-a07c-4ec9-b2c9-902000c36092)
 
 ![Screenshot (141)](https://github.com/user-attachments/assets/93ee2654-36aa-4751-85d4-f789120a88f6)
+
+## **2.2.1**
+![Desktop Screenshot 2025 02 03 - 14 19 00 46](https://github.com/user-attachments/assets/e8d8d18b-44b6-45a6-822c-6040d818fa87)
+![Desktop Screenshot 2025 02 03 - 14 21 02 62](https://github.com/user-attachments/assets/11a58c4a-330c-401f-9c97-7f0126a8dbc6)
+![Desktop Screenshot 2025 02 03 - 14 21 49 75](https://github.com/user-attachments/assets/fe8008fa-67db-4da7-a46b-0997fda8389e)
 
 ---
 
