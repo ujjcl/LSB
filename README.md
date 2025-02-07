@@ -6,7 +6,6 @@
 ![Security](https://img.shields.io/badge/Security-Critical-red)
 
 Advanced image encryption system combining **LSB steganography** with **AES-256 encryption** and cryptographic randomization.  
-**WARNING: Losing the encryption key will result in permanent data loss!** 
 ---
 
 ## **1.0 (Basic LSB)**
