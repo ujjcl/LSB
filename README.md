@@ -1,11 +1,11 @@
-# Image Encryption Using LSB Technique with AES-256 and Cryptographic Randomization
+# Image Encryption Using LSB Technique with AES and Cryptographic Randomization
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![Flask](https://img.shields.io/badge/Flask-2.3.2-green)
 ![License](https://img.shields.io/badge/License-GPLv3-orange)
 ![Security](https://img.shields.io/badge/Security-Critical-red)
 
-Advanced image encryption system combining **LSB steganography** with **AES-256 encryption** and cryptographic randomization.  
+Advanced image encryption system combining **LSB steganography** with **AES encryption** and cryptographic randomization.  
 ---
 
 ## **1.0 (Basic LSB)**
@@ -42,7 +42,7 @@ Advanced image encryption system combining **LSB steganography** with **AES-256 
 ---
 
 ## Key Features
-- **Encryption**: AES-256 with 44-character Base64 keys.
+- **Encryption**: AES with 44-character Base64 keys.
 - **Secure Key Management**: Keys are generated cryptographically and **never stored**.
 - **Anti-Tampering**: Randomized embedding using SHA-256 hashing.
 - **Web Interface**: User-friendly encryption/decryption via browser.
