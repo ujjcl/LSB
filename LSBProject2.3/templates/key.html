@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المفتاح</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+    
+    :root {
+      --primary-gradient: linear-gradient(135deg, #6366f1, #3b82f6);
+      --dark-background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --glass-bg: rgba(30, 41, 59, 0.8);
+    }
+    
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--dark-background);
+      min-height: 100vh;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .gradient-text {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .gradient-btn {
+      background: var(--primary-gradient);
+      transition: all 0.3s ease;
+    }
+    
+    .gradient-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .key-display {
+      background: rgba(79, 70, 229, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+    }
+    
+    .copy-btn {
+      transition: all 0.2s ease;
+    }
+    
+    .copy-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .input-field {
+      background: rgba(79, 70, 229, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      border-color: rgba(99, 102, 241, 0.8);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    }
+    
+    .notification {
+      transform: translateY(100%);
+      transition: all 0.3s ease;
+    }
+    
+    .pulse-dot {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body class="p-6">
+  <div class="container mx-auto max-w-3xl space-y-8">
+    <!-- Navigation Bar -->
+    <nav class="flex justify-between items-center">
+      <a href="/" class="gradient-btn px-6 py-3 rounded-lg inline-flex items-center gap-2 text-white">
+        <i class="fas fa-arrow-right"></i>
+        <span>العودة</span>
+      </a>
+      <a href="/manage_keys" class="gradient-btn px-6 py-3 rounded-lg inline-flex items-center gap-2 text-white">
+        <i class="fas fa-list ml-2"></i>
+        <span>عرض المفاتيح</span>
+      </a>
+    </nav>
+
+    <!-- Main Key Card -->
+    <div class="glass-panel p-8 space-y-8">
+      <!-- Header -->
+      <div class="flex flex-col gap-2">
+        <h1 class="text-3xl font-bold gradient-text flex items-center gap-3">
+          <i class="fas fa-key"></i>
+          <span>مفتاحك السري</span>
+        </h1>
+        <p class="text-indigo-300 text-sm">تم الإنشاء: {{ timestamp }}</p>
+      </div>
+
+      <!-- Key Display -->
+      <div class="relative">
+        <div class="key-display flex items-center justify-between p-5 rounded-xl">
+          <code id="key-text" class="text-lg font-mono break-all">{{ key }}</code>
+          <button 
+            type="button" 
+            onclick="copyKey()" 
+            class="copy-btn w-12 h-12 flex items-center justify-center rounded-lg bg-indigo-600 hover:bg-indigo-700"
+            title="نسخ المفتاح"
+          >
+            <i class="fas fa-copy text-xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Key Label Form -->
+      <form action="/key" method="POST" class="space-y-6">
+        <div>
+          <label for="label" class="block text-lg mb-3 flex items-center gap-2">
+            <i class="fas fa-tag"></i>
+            <span>تسمية المفتاح (اختياري)</span>
+          </label>
+          <input 
+            type="text" 
+            name="label" 
+            id="label" 
+            class="input-field w-full p-4 rounded-lg text-white placeholder-gray-400 outline-none" 
+            placeholder="مثلاً: مفتاح المشروع الرئيسي"
+          >
+        </div>
+        <button type="submit" class="gradient-btn w-full py-4 px-6 rounded-lg text-white font-medium flex items-center justify-center gap-2">
+          <i class="fas fa-save"></i>
+          <span>حفظ المفتاح</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Instructions Panel -->
+    <div class="glass-panel p-8 space-y-6">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-exclamation-circle text-2xl text-yellow-400"></i>
+        <h2 class="text-2xl font-bold text-yellow-400">تعليمات هامة</h2>
+      </div>
+      
+      <!-- Instructions List -->
+      <div class="space-y-6">
+        <div class="flex items-start gap-4">
+          <div class="w-8 flex-shrink-0 flex justify-center">
+            <div class="h-2 w-2 bg-yellow-400 rounded-full mt-3 pulse-dot"></div>
+          </div>
+          <p class="text-yellow-400 font-medium">{{ instruction2 }}</p>
+        </div>
+        
+        <div class="flex items-start gap-4">
+          <div class="w-8 flex-shrink-0 flex justify-center">
+            <div class="h-2 w-2 bg-red-500 rounded-full mt-3 pulse-dot"></div>
+          </div>
+          <p class="text-red-500 font-medium">{{ warning }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div 
+    id="copy-notification" 
+    class="notification fixed bottom-8 right-8 bg-indigo-600 px-6 py-3 rounded-lg shadow-xl opacity-0 pointer-events-none"
+  >
+    <div class="flex items-center gap-3">
+      <i class="fas fa-check-circle"></i>
+      <span>تم النسخ بنجاح!</span>
+    </div>
+  </div>
+
+  <script>
+    function copyKey() {
+      const keyText = document.getElementById('key-text');
+      
+      navigator.clipboard.writeText(keyText.innerText)
+        .then(() => showNotification(true))
+        .catch(() => {
+          const textArea = document.createElement('textarea');
+          textArea.value = keyText.innerText;
+          document.body.appendChild(textArea);
+          textArea.select();
+          
+          try {
+            document.execCommand('copy');
+            showNotification(true);
+          } catch (err) {
+            showNotification(false);
+          }
+          
+          document.body.removeChild(textArea);
+        });
+      
+      addButtonEffect();
+    }
+
+    function addButtonEffect() {
+      const btn = document.querySelector('.copy-btn');
+      btn.classList.add('animate-pulse');
+      setTimeout(() => btn.classList.remove('animate-pulse'), 500);
+    }
+
+    function showNotification(success) {
+      const notification = document.getElementById('copy-notification');
+      notification.style.opacity = '1';
+      notification.style.transform = 'translateY(0)';
+      
+      if (!success) {
+        notification.style.backgroundColor = '#ef4444';
+        notification.querySelector('span').textContent = 'فشل النسخ! حاول مرة أخرى';
+      }
+      
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateY(20px)';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
