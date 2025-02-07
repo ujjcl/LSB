@@ -42,7 +42,7 @@ Advanced image encryption system combining **LSB steganography** with **AES-256 
 ---
 
 ## Key Features
-- **Military-Grade Encryption**: AES-256 with 44-character Base64 keys.
+- **Encryption**: AES-256 with 44-character Base64 keys.
 - **Secure Key Management**: Keys are generated cryptographically and **never stored**.
 - **Anti-Tampering**: Randomized embedding using SHA-256 hashing.
 - **Web Interface**: User-friendly encryption/decryption via browser.
