@@ -110,7 +110,7 @@ Advanced image encryption system combining **LSB steganography** with **AES encr
 2. Upload a cover image (PNG/BMP recommended).
 3. Enter your secret message and **paste the generated key**.
 4. Click **Encrypt Text**. The system will:
-   - Encrypt the message using AES-256.
+   - Encrypt the message using AES.
    - Embed the data into the image using randomized LSBs.
    - Display the stego image with PSNR/MSE metrics.
 
