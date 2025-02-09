@@ -84,7 +84,7 @@ Advanced image encryption system combining **LSB steganography** with **AES encr
 ## Step-by-Step Usage Guide
 
 ### 1. Generating a Cryptographic Key (`/key` Route)
-#### Why the Key is Critical 🔑
+#### Why the Key is Critical 
 - **Irreversible Loss**: The key is **required for decryption**. If lost, your data is permanently inaccessible.
 - **No Backdoor**: The system has no key recovery mechanism for security reasons.
 
@@ -132,14 +132,14 @@ Advanced image encryption system combining **LSB steganography** with **AES encr
 
 ## Troubleshooting: Keys with Unwanted Symbols (e.g., `_`, `-`)
 
-### ❌ Problem: Invalid Symbols in Key
+### Problem: Invalid Symbols in Key
 If your generated key contains symbols like `_` or `-` (which are **not allowed** in Fernet keys), follow these steps:
 
-### 🔍 Cause
+###  Cause
 - **Encoding Issue**: While Fernet keys use Base64 encoding (allowed chars: `A-Z, a-z, 0-9, +, /, =`), some systems may incorrectly display/encode characters.
 - **Manual Modification**: Accidentally typing/editing the key.
 
-### 🛠 Solution: Regenerate Until Valid
+###  Solution: Regenerate Until Valid
 1. **Via Web Interface**:
    - Go to `/key` route:  
      ```bash
@@ -152,10 +152,10 @@ If your generated key contains symbols like `_` or `-` (which are **not allowed*
 
    
 
-### ✅ Valid Key Example
+###  Valid Key Example
 ```
 AValidKey1234567890ABCDEFGHIJKLpMNOPQRSTUVWXYZ=
 ```
 
-### 📝 Note
+###  Note
 - Always use the **COPY** button – never edit keys manually.
