@@ -76,7 +76,8 @@ Advanced image encryption system combining **LSB steganography** with **AES encr
 
 4. Access the web interface at:
    ```
-   http://localhost:5000
+  http://127.0.0.1:5000
+
    ```
 
 ---
@@ -91,7 +92,7 @@ Advanced image encryption system combining **LSB steganography** with **AES encr
 #### How to Generate a Key
 1. Navigate to:
    ```
-   http://localhost:5000/key
+   http://127.0.0.1:5000/key
    ```
 2. The system auto-generates a **44-character Base64 key** (e.g., `jX2pK5L9RqZvBtGyVnYr4wTfWmSdPh6E...`).
 3. **Copy the key** using the "Copy" button or manually.
@@ -105,7 +106,7 @@ Advanced image encryption system combining **LSB steganography** with **AES encr
 ### 2. Encrypting Data
 1. Go to the homepage:
    ```
-   http://localhost:5000
+   http://127.0.0.1:5000
    ```
 2. Upload a cover image (PNG/BMP recommended).
 3. Enter your secret message and **paste the generated key**.
@@ -143,7 +144,7 @@ If your generated key contains symbols like `_` or `-` (which are **not allowed*
 1. **Via Web Interface**:
    - Go to `/key` route:  
      ```bash
-     http://localhost:5000/key
+     http://127.0.0.1:5000/key
      ```
    - Refresh **the page** repeatedly until you get a valid key like:  
      ```
