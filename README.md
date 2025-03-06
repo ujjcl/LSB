@@ -13,6 +13,7 @@ An advanced image encryption system combining **LSB steganography** with **AES e
 
 Experience the application online at: [https://lsb-tjxx.onrender.com](https://lsb-tjxx.onrender.com)
 
+> **Note:** The site may be in sleep mode and can take about one minute to start up.
 ---
 
 ## Project Versions
