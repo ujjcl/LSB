@@ -35,6 +35,10 @@ An advanced image encryption system combining **LSB steganography** with **AES e
 ![Version 2.2.1 Screenshot 2](https://github.com/user-attachments/assets/11a58c4a-330c-401f-9c97-7f0126a8dbc6)
 ![Version 2.2.1 Screenshot 3](https://github.com/user-attachments/assets/fe8008fa-67db-4da7-a46b-0997fda8389e)
 
+
+### **2.4**
+![Desktop Screenshot 2025 03 07 - 00 57 05 06](https://github.com/user-attachments/assets/9ba6f5d6-761e-4721-bb30-0585a6f0f07b)
+
 ---
 
 ## Key Features
