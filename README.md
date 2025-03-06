@@ -9,6 +9,12 @@ An advanced image encryption system combining **LSB steganography** with **AES e
 
 ---
 
+## Live Demo
+
+Experience the application online at: [https://lsb-tjxx.onrender.com](https://lsb-tjxx.onrender.com)
+
+---
+
 ## Project Versions
 
 ### **1.0 (Basic LSB)**
