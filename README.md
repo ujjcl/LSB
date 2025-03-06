@@ -2,8 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![Flask](https://img.shields.io/badge/Flask-2.3.2-green)
-![License](https://img.shields.io/badge/License-GPLv3-orange)
-![Security](https://img.shields.io/badge/Security-Critical-red)
+
 
 An advanced image encryption system combining **LSB steganography** with **AES encryption** and cryptographic randomization. This project ensures secure data embedding within images, strengthened by robust cryptographic practices.
 
