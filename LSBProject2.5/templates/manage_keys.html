@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة المفاتيح</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+    
+    :root {
+      --primary-gradient: linear-gradient(135deg, #6366f1, #3b82f6);
+      --dark-background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    }
+    
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--dark-background);
+      min-height: 100vh;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    
+    .glass-panel {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .gradient-text {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .search-input {
+      background: rgba(79, 70, 229, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      transition: all 0.3s ease;
+    }
+    
+    .search-input:focus {
+      border-color: rgba(99, 102, 241, 0.8);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    }
+    
+    .btn-primary {
+      background: var(--primary-gradient);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .copy-btn {
+      transition: all 0.2s ease;
+    }
+    
+    .copy-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .notification {
+      transform: translateY(100%);
+      transition: all 0.3s ease;
+    }
+    
+    .notification.show {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="p-6">
+  <div class="container mx-auto max-w-6xl space-y-8">
+    <!-- Header Section -->
+    <div class="glass-panel p-6 mb-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <h1 class="text-3xl font-bold gradient-text">إدارة المفاتيح</h1>
+        <div class="flex items-center gap-3">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="ابحث عن مفتاح..." 
+            class="search-input p-3 rounded-lg w-full md:w-64 text-white placeholder-gray-400 outline-none"
+          >
+          <button 
+            onclick="searchKeys()" 
+            class="btn-primary px-6 py-3 rounded-lg flex items-center gap-2"
+          >
+            <i class="fas fa-search"></i>
+            <span>بحث</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="glass-panel p-6 overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="border-b border-gray-700">
+            <th class="px-6 py-4 text-right">المعرف</th>
+            <th class="px-6 py-4 text-right">المفتاح</th>
+            <th class="px-6 py-4 text-right">التسمية</th>
+            <th class="px-6 py-4 text-right">تاريخ الإنشاء</th>
+            <th class="px-6 py-4 text-center">نسخ</th>
+            <th class="px-6 py-4 text-center">إجراءات</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-700">
+          {% for key in keys %}
+          <tr class="hover:bg-gray-700/30 transition-colors">
+            <td class="px-6 py-4">{{ key.id }}</td>
+            <td class="px-6 py-4 font-mono text-sm break-all" id="key-{{ key.id }}">{{ key.key_value }}</td>
+            <td class="px-6 py-4">{{ key.label or '-' }}</td>
+            <td class="px-6 py-4">{{ key.created_at.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+            <td class="px-6 py-4 text-center">
+              <button 
+                onclick="copyKey('{{ key.id }}')" 
+                class="copy-btn p-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg"
+                title="نسخ المفتاح"
+              >
+                <i class="fas fa-copy"></i>
+              </button>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <form 
+                action="/delete_key/{{ key.id }}" 
+                method="POST" 
+                onsubmit="return confirm('هل أنت متأكد من حذف هذا المفتاح؟');" 
+                class="inline"
+              >
+                <button 
+                  type="submit" 
+                  class="p-2 bg-red-600 hover:bg-red-700 rounded-lg transition-all"
+                  title="حذف المفتاح"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" class="px-6 py-8 text-center text-gray-400">لا توجد مفاتيح محفوظة.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Action Button -->
+    <div class="text-center py-6">
+      <a 
+        href="/key" 
+        class="btn-primary inline-flex items-center px-8 py-4 rounded-lg gap-3 text-lg font-medium"
+      >
+        <i class="fas fa-plus"></i>
+        <span>توليد مفتاح جديد</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div 
+    id="copy-notification" 
+    class="notification fixed bottom-8 right-8 bg-indigo-600 px-6 py-3 rounded-lg shadow-xl opacity-0 pointer-events-none"
+  >
+    <div class="flex items-center gap-3">
+      <i class="fas fa-check-circle"></i>
+      <span>تم النسخ بنجاح!</span>
+    </div>
+  </div>
+
+  <script>
+    function copyKey(keyId) {
+      const keyElement = document.getElementById('key-' + keyId);
+      const keyValue = keyElement.innerText.trim();
+      
+      navigator.clipboard.writeText(keyValue)
+        .then(() => showNotification(true))
+        .catch(() => {
+          const textArea = document.createElement('textarea');
+          textArea.value = keyValue;
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            showNotification(true);
+          } catch (err) {
+            showNotification(false);
+          }
+          document.body.removeChild(textArea);
+        });
+    }
+    
+    function showNotification(success) {
+      const notification = document.getElementById('copy-notification');
+      notification.style.opacity = '1';
+      notification.style.transform = 'translateY(0)';
+      
+      if (!success) {
+        notification.style.backgroundColor = '#ef4444';
+        notification.querySelector('span').textContent = 'فشل النسخ! حاول مرة أخرى';
+      }
+      
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateY(20px)';
+      }, 2000);
+    }
+
+    function searchKeys() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const tbody = document.querySelector('tbody');
+      const rows = tbody.getElementsByTagName('tr');
+
+      for (let row of rows) {
+        const cells = row.getElementsByTagName('td');
+        let found = false;
+        
+        for (let cell of cells) {
+          if (cell.textContent.toLowerCase().includes(input)) {
+            found = true;
+            break;
+          }
+        }
+        
+        row.style.display = found ? '' : 'none';
+      }
+    }
+  </script>
+</body>
+</html>
