@@ -45,6 +45,11 @@ Experience the application online at: [https://lsb-tjxx.onrender.com](https://ls
 ### **2.4**
 ![Desktop Screenshot 2025 03 07 - 00 57 05 06](https://github.com/user-attachments/assets/9ba6f5d6-761e-4721-bb30-0585a6f0f07b)
 
+### **2.5**
+![image](https://github.com/user-attachments/assets/35562bca-fcee-457c-bee3-31994b610779)
+
+
+
 ---
 
 ## Key Features
