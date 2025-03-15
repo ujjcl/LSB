@@ -152,7 +152,7 @@ The key is essential for both encryption and decryption. If lost, the encrypted 
    - Reconstruct the embedding sequence using the provided key.
    - Decrypt and display the hidden message.
 
-*Note:* The stego image must remain unaltered for decryption to succeed.
+> **Note:** The stego image must remain unaltered for decryption to succeed.
 
 ---
 
