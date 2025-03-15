@@ -184,7 +184,7 @@ The key is essential for both encryption and decryption. If lost, the encrypted 
 
 | Issue                                     | Solution                                                              |
 |-------------------------------------------|-----------------------------------------------------------------------|
-| Key contains invalid characters (e.g., '_' or '-') | Regenerate the key until a valid 44-character Base64 key is obtained, Refresh until you get a valid key like: *```*tyIKetCBoITu82wJ4rN3ryzIWlKvB3EMcRC38jYVKbM=  ```*|
+| Key contains invalid characters (e.g., '_' or '-') | Regenerate the key until a valid 44-character Base64 key is obtained, * Refresh until you get a valid key like: ```*tyIKetCBoITu82wJ4rN3ryzIWlKvB3EMcRC38jYVKbM=  ``` *|
 | Decryption error                          | Verify that the decryption key exactly matches the encryption key and that the image has not been modified or compressed. |
 | Slow performance                          | Use cover images smaller than 5MB to improve processing speed.         |
 | Installation issues                       | Ensure you are using Python 3.10+ and that all dependencies are properly installed. |
