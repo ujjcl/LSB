@@ -6,7 +6,7 @@
 ![Encryption](https://img.shields.io/badge/Encryption-Fernet-important)
 ![LSB](https://img.shields.io/badge/Steganography-LSB-success)
 
-An advanced image encryption system that combines LSB steganography with AES encryption and cryptographic randomization. The system securely embeds encrypted data within images using robust cryptographic practices and randomized data distribution, ensuring both confidentiality and integrity.
+Image encryption system that combines LSB steganography with AES encryption and cryptographic randomization. The system securely embeds encrypted data within images using robust cryptographic practices and randomized data distribution, ensuring both confidentiality and integrity.
 ---
 
 ## Live Demo
