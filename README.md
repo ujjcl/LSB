@@ -11,7 +11,6 @@ Image encryption system that combines LSB steganography with AES encryption and 
 
 ## Live Demo
 
-Access the application online at:  
 [https://lsb-tjxx.onrender.com](https://lsb-tjxx.onrender.com)
 
 > **Note:** The site may be in sleep mode and can take about one minute to start up.
