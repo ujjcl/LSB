@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>النتيجة</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="manifest" href="/static/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #3b82f6);
+            --dark-background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--dark-background);
+            min-height: 100vh;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .glass-morphism {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            box-shadow: 0 10px 40px rgba(31, 38, 135, 0.4);
+            border-radius: 1.5rem;
+        }
+
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .metric-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="container mx-auto max-w-6xl">
+        <!-- البطاقة الرئيسية -->
+        <div class="glass-morphism p-8 lg:p-12 space-y-10">
+            <!-- الهيدر -->
+            <header class="flex flex-col md:flex-row gap-6 items-center justify-between mb-8">
+                <div class="flex items-center gap-5">
+                    <div class="w-20 h-20 bg-indigo-900/30 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-4xl text-indigo-400"></i>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold gradient-text">
+                        تم التشفير بنجاح
+                    </h1>
+                </div>
+                <div class="text-indigo-300">
+                    <i class="fas fa-clock ml-2"></i>
+                    {{ timestamp }}
+                </div>
+            </header>
+
+            <!-- محتوى النتائج -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- قسم المقاييس -->
+                <div class="metric-card p-6 rounded-xl">
+                    <h2 class="text-2xl font-bold mb-6 text-indigo-300">
+                        <i class="fas fa-chart-line ml-2"></i>
+                        مؤشرات الأداء
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-4 bg-indigo-900/20 rounded-lg">
+                            <div>
+                                <p class="text-gray-300">PSNR</p>
+                                <p class="text-xs text-emerald-400">Higher is better</p>
+                            </div>
+                            <span class="font-mono text-xl text-emerald-400">{{ psnr }}</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-indigo-900/20 rounded-lg">
+                            <div>
+                                <p class="text-gray-300">MSE</p>
+                                <p class="text-xs text-rose-400">Lower is better</p>
+                            </div>
+                            <span class="font-mono text-xl text-rose-400">{{ mse }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قسم الصورة -->
+                <div class="space-y-6">
+                    <div class="group relative rounded-xl overflow-hidden">
+                        <img src="{{ image_path }}" 
+                             class="w-full h-64 object-cover transform transition-transform duration-300 group-hover:scale-105">
+                        
+                             <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent flex items-end p-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="{{ image_path }}" download
+                                   class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-lg 
+                                          flex items-center justify-center gap-2 transition-all transform hover:scale-105">
+                                    <i class="fas fa-download"></i>
+                                    تحميل الصورة
+                                </a>
+                            </div>
+                        </div>
+                    
+                    <!-- معلومات الملف -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                        <div class="bg-indigo-900/20 px-4 py-2 rounded-lg text-center">
+                            <p class="text-indigo-300">الصيغة</p>
+                            <p class="text-gray-300">{{ file_format }}</p>
+                        </div>
+                        <div class="bg-indigo-900/20 px-4 py-2 rounded-lg text-center">
+                            <p class="text-indigo-300">الدقة</p>
+                            <p class="text-gray-300">{{ resolution }}</p>
+                        </div>
+                        <div class="bg-indigo-900/20 px-4 py-2 rounded-lg text-center">
+                            <p class="text-indigo-300">الحجم</p>
+                            <p class="text-gray-300">{{ file_size }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 flex justify-center">
+                <a href="/share?img={{ image_path | urlencode }}"
+                   class="bg-purple-600 hover:bg-purple-700 text-white py-3 px-8 rounded-xl 
+                          flex items-center gap-2 transition-all transform hover:scale-105">
+                    <i class="fas fa-share-alt"></i>
+                    <span class="text-lg">مشاركة الصورة</span>
+                </a>
+            </div>
+            <!-- إجراءات الصفحة -->
+            <div class="pt-8 border-t border-indigo-900/30">
+                <a href="/" 
+                   class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
+                          rounded-lg hover:opacity-90 transition-all">
+                    <i class="fas fa-arrow-left ml-2"></i>
+                    العودة 
+                </a>
+            </div>
+        </div>
+     
+    </div>
+    
+    
+    <!-- إشعارات -->
+    <div id="notification" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-indigo-700 px-6 py-3 rounded-full opacity-0 transition-all duration-300 shadow-xl">
+        <i class="fas fa-check-circle ml-2"></i>
+        تم التحميل بنجاح!
+    </div>
+</body>
+</html>
+<script>
+    // دعم مشاركة الصورة
+    async function shareContent() {
+        try {
+            const imagePath = "{{ image_path }}";
+            const response = await fetch(imagePath);
+            const blob = await response.blob();
+            const file = new File([blob], 'secret_image.png', { type: blob.type });
+            
+            // تحقق من دعم Web Share API
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    title: 'صورة مشفرة',
+                    text: 'تم إنشاء هذه الصورة باستخدام أداة إخفاء النصوص المشفرة',
+                    files: [file]
+                });
+                showNotification('تمت المشاركة بنجاح!');
+            } else if (navigator.share) {
+                // مشاركة الرابط إذا كانت مشاركة الملفات غير مدعومة
+                await navigator.share({
+                    title: 'صورة مشفرة',
+                    text: 'تم إنشاء هذه الصورة باستخدام أداة إخفاء النصوص المشفرة',
+                    url: window.location.href
+                });
+                showNotification('تمت مشاركة الرابط بنجاح!');
+            } else {
+                // نسخ الرابط إلى الحافظة كحل بديل
+                await navigator.clipboard.writeText(window.location.href);
+                showNotification('تم نسخ الرابط إلى الحافظة');
+            }
+        } catch (error) {
+            console.error('خطأ في المشاركة:', error);
+            showNotification('فشلت المشاركة: ' + error.message, 'error');
+        }
+    }
+
+    // إضافة دعم للتحميل مع إظهار إشعار
+    function handleDownload(event) {
+        // إظهار إشعار عند النقر على زر التحميل
+        showNotification('جارٍ تحميل الصورة...');
+        // استخدام setTimeout للسماح بإظهار الإشعار قبل بدء التحميل
+        setTimeout(() => {
+            showNotification('تم التحميل بنجاح!');
+        }, 1500);
+    }
+
+    // إخفاء زر المشاركة إذا غير مدعوم والربط بين الوظائف والأزرار
+    window.addEventListener('DOMContentLoaded', () => {
+        // التحقق من دعم المشاركة لكلا الزرين
+        if (!navigator.share) {
+            const shareButtons = document.querySelectorAll('[id^="shareButton"]');
+            shareButtons.forEach(button => {
+                button.style.display = 'none';
+            });
+        }
+        
+        // إضافة مستمعات أحداث لأزرار التحميل
+        const downloadLinks = document.querySelectorAll('a[download]');
+        downloadLinks.forEach(link => {
+            link.addEventListener('click', handleDownload);
+        });
+
+        // التحقق من دعم الحافظة وإظهار/إخفاء الميزات ذات الصلة
+        if (!navigator.clipboard) {
+            console.warn('نسخ الرابط إلى الحافظة غير مدعوم في هذا المتصفح');
+        }
+    });
+
+    // تحسين الإشعارات
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        notification.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'} ml-2"></i>${message}`;
+        notification.className = `fixed bottom-8 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full 
+            transition-all duration-300 shadow-xl ${
+                type === 'error' ? 'bg-red-600' : 'bg-indigo-700'
+            }`;
+        notification.style.opacity = '1';
+        setTimeout(() => { notification.style.opacity = '0'; }, 3000);
+    }
+
+    // تهيئة Progressive Web App إذا كانت مدعومة
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js').then(registration => {
+                console.log('ServiceWorker registration successful');
+            }).catch(error => {
+                console.log('ServiceWorker registration failed: ', error);
+            });
+        });
+    }
+
+    // دالة مساعدة لفحص اتصال الإنترنت وإظهار إشعار مناسب
+    function checkOnline() {
+        if (!navigator.onLine) {
+            showNotification('أنت حاليا في وضع عدم الاتصال. بعض الميزات قد لا تعمل.', 'error');
+        }
+    }
+
+    // التحقق من حالة الاتصال عند تحميل الصفحة
+    window.addEventListener('load', checkOnline);
+    window.addEventListener('online', () => showNotification('تم استعادة الاتصال بالإنترنت'));
+    window.addEventListener('offline', () => showNotification('أنت الآن في وضع عدم الاتصال', 'error'));
+</script>
