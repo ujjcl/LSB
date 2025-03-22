@@ -181,7 +181,7 @@ The key is essential for both encryption and decryption. If lost, the encrypted 
 
 ## Troubleshooting
 
-> **Note:** This issue has been resolved in version 2.5, The key generation process has been updated to automatically produce a valid 44-character Base64 key, eliminating the need for manual regeneration.
+> **Note:** Key issue has been resolved in version 2.5, The key generation process has been updated to automatically produce a valid 44-character Base64 key, eliminating the need for manual regeneration.
 
 | Issue                                     | Solution                                                              |
 |-------------------------------------------|-----------------------------------------------------------------------|
