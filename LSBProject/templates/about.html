@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كيف تعمل؟ - إخفاء النصوص المشفرة</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="manifest" href="/static/manifest.webmanifest">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #3b82f6);
+            --dark-background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--dark-background);
+            min-height: 100vh;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .glass-morphism {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            box-shadow: 0 10px 40px rgba(31, 38, 135, 0.4);
+            border-radius: 1.5rem;
+        }
+
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .demo-pixel {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            margin: 4px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .demo-container {
+            overflow-x: auto;
+            padding: 1rem;
+        }
+
+        .bit {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            font-size: 10px;
+            line-height: 12px;
+            text-align: center;
+            color: black;
+            font-weight: bold;
+        }
+
+        .bit-r {
+            background-color: rgba(239, 68, 68, 0.8);
+            left: 2px;
+            top: 2px;
+        }
+
+        .bit-g {
+            background-color: rgba(34, 197, 94, 0.8);
+            left: 18px;
+            top: 2px;
+        }
+
+        .bit-b {
+            background-color: rgba(59, 130, 246, 0.8);
+            left: 34px;
+            top: 2px;
+        }
+
+        .animated-arrow {
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(10px); }
+        }
+
+        .process-step {
+            position: relative;
+        }
+
+        .process-step::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: rgba(99, 102, 241, 0.5);
+            top: 100%;
+            bottom: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .process-step:last-child::after {
+            display: none;
+        }
+
+        .animation-container {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #aes-animation, #lsb-animation {
+            width: 100%;
+            position: relative;
+            height: 100%;
+        }
+
+        .chart-container {
+            height: 250px;
+            width: 100%;
+        }
+        .pixel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 1rem;
+    justify-items: center;
+}
+
+.pixel-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    min-width: 120px;
+    transition: transform 0.3s ease;
+}
+
+.pixel-card:hover {
+    transform: translateY(-5px);
+}
+
+.pixel-annotation {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+}
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="container mx-auto max-w-4xl">
+        <!-- البطاقة الرئيسية -->
+        <div class="glass-morphism p-8 lg:p-12 space-y-10">
+            <!-- الهيدر -->
+            <header class="flex flex-col md:flex-row gap-6 items-center justify-between mb-8">
+                <div class="flex items-center gap-5">
+                    <div class="w-16 h-16 bg-indigo-900/30 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-cogs text-3xl text-indigo-400"></i>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold gradient-text">
+                        كيف تعمل منظومة الإخفاء؟
+                    </h1>
+                </div>
+            </header>
+
+            <!-- شرح مقدمة -->
+            <section class="space-y-4">
+                <p class="text-lg">
+                    يستخدم هذا التطبيق تقنيتين أساسيتين لإخفاء الرسائل السرية داخل الصور بطريقة آمنة:
+                </p>
+                <div class="grid md:grid-cols-2 gap-8 pt-4">
+                    <div class="bg-indigo-900/20 p-6 rounded-xl">
+                        <h3 class="text-xl font-bold text-indigo-300 mb-3">
+                            <i class="fas fa-lock mr-2"></i> تشفير AES
+                        </h3>
+                        <p>
+                            خوارزمية تشفير متقدمة تحول النص إلى بيانات مشفرة باستخدام مفتاح سري. تحمي البيانات وتجعل من المستحيل فهمها بدون المفتاح الصحيح.
+                        </p>
+                    </div>
+                    <div class="bg-indigo-900/20 p-6 rounded-xl">
+                        <h3 class="text-xl font-bold text-indigo-300 mb-3">
+                            <i class="fas fa-eye-slash mr-2"></i> تقنية LSB
+                        </h3>
+                        <p>
+                            طريقة لإخفاء البيانات داخل أقل بت أهمية في كل بكسل من الصورة، مما يجعل التغييرات غير مرئية للعين البشرية.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- شرح تفصيلي للعملية -->
+            <section class="space-y-12 mt-10">
+                <h2 class="text-2xl font-bold gradient-text">مراحل العملية بالتفصيل</h2>
+                
+                <!-- المرحلة الأولى: استلام البيانات -->
+                <div class="process-step bg-slate-800/30 p-6 rounded-xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-indigo-900/50 rounded-full flex items-center justify-center text-xl font-bold">1</div>
+                        <h3 class="text-xl font-bold text-indigo-300">استلام البيانات</h3>
+                    </div>
+                    <p class="mb-4">
+                        عند إرسال الصورة والنص السري، يقوم الخادم أولاً بالتحقق من صحة الملفات وتخزينها مؤقتاً، ثم يقوم بمعالجة النص وتجهيزه للتشفير.
+                    </p>
+                    <div class="bg-slate-900/40 p-4 rounded-lg">
+                        <code class="text-emerald-400">
+                            النص الأصلي → التحقق من المدخلات → تجهيز البيانات
+                        </code>
+                    </div>
+                </div>
+
+                <!-- المرحلة الثانية: تشفير AES -->
+                <div class="process-step bg-slate-800/30 p-6 rounded-xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-indigo-900/50 rounded-full flex items-center justify-center text-xl font-bold">2</div>
+                        <h3 class="text-xl font-bold text-indigo-300">تشفير النص بواسطة AES</h3>
+                    </div>
+                    <p class="mb-4">
+                        يتم تشفير النص باستخدام خوارزمية AES والمفتاح السري المقدم. تعمل هذه الخوارزمية على تحويل النص العادي إلى مجموعة من البايتات المشفرة التي يستحيل فهمها بدون فك التشفير بالمفتاح الصحيح.
+                    </p>
+                    <div class="animation-container bg-slate-900/40 rounded-lg overflow-hidden" id="aes-animation">
+                        <div class="flex items-center justify-around h-full">
+                            <div class="text-center p-4 bg-slate-800/70 rounded-lg w-1/4">
+                                <div class="text-lg font-bold text-white mb-2">النص الأصلي</div>
+                                <div class="text-green-400">أهلا بالعالم</div>
+                            </div>
+                            <div class="animated-arrow text-3xl text-indigo-400">
+                                <i class="fas fa-arrow-left"></i>
+                            </div>
+                            <div class="text-center p-4 bg-slate-800/70 rounded-lg w-1/4">
+                                <div class="text-lg font-bold text-white mb-2">مفتاح التشفير</div>
+                                <div class="text-yellow-400 text-xs break-all">2x7ZPnL8QVuDevpCM...</div>
+                            </div>
+                            <div class="animated-arrow text-3xl text-indigo-400">
+                                <i class="fas fa-arrow-left"></i>
+                            </div>
+                            <div class="text-center p-4 bg-slate-800/70 rounded-lg w-1/4">
+                                <div class="text-lg font-bold text-white mb-2">النص المشفر</div>
+                                <div class="text-red-400 text-xs break-all">gAS9pfdS2Q+js...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 bg-slate-900/40 p-4 rounded-lg">
+                        <h4 class="text-indigo-300 font-bold mb-2">الشفرة الحقيقية المستخدمة:</h4>
+                        <code class="text-emerald-400 text-sm">
+                            encrypted_data = encrypt_aes(text, key)<br>
+                            # استخدام مكتبة Fernet للتشفير<br>
+                            cipher = Fernet(key)<br>
+                            return cipher.encrypt(text.encode())
+                        </code>
+                    </div>
+                </div>
+
+                <!-- المرحلة الثالثة: تحويل البيانات المشفرة إلى ثنائي -->
+                <div class="process-step bg-slate-800/30 p-6 rounded-xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-indigo-900/50 rounded-full flex items-center justify-center text-xl font-bold">3</div>
+                        <h3 class="text-xl font-bold text-indigo-300">تحويل البيانات المشفرة إلى تمثيل ثنائي</h3>
+                    </div>
+                    <p class="mb-4">
+                        بعد تشفير النص، يتم تحويله إلى سلسلة من البتات الثنائية (0 و 1) لإعداده للإخفاء داخل الصورة.
+                    </p>
+                    <div class="bg-slate-900/40 p-4 rounded-lg overflow-x-auto">
+                        <div class="mb-2 text-indigo-300 font-bold">مثال على تحويل النص المشفر إلى تمثيل ثنائي:</div>
+                        <code class="text-emerald-400 text-sm whitespace-nowrap">
+                            النص المشفر: gAS9pf... → التمثيل الثنائي: 01100111 01000001 01010011 00111001 01110000 01100110 ...
+                        </code>
+                        <div class="mt-4 text-xs text-gray-400">
+                            يتم إضافة علامة نهاية خاصة (1111111111111110) للتعرف على نهاية الرسالة عند الاستخراج.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة الرابعة: توليد مواضع عشوائية -->
+                <div class="process-step bg-slate-800/30 p-6 rounded-xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-indigo-900/50 rounded-full flex items-center justify-center text-xl font-bold">4</div>
+                        <h3 class="text-xl font-bold text-indigo-300">توليد مواضع عشوائية في الصورة</h3>
+                    </div>
+                    <p class="mb-4">
+                        لتعزيز الأمان، يستخدم المفتاح السري لتوليد تسلسل عشوائي من المواضع داخل الصورة. هذه المواضع هي التي سيتم استخدامها لإخفاء البيانات، مما يعني أن البيانات لن تكون متتالية أو قابلة للتوقع.
+                    </p>
+                    <div class="bg-slate-900/40 p-4 rounded-lg">
+                        <h4 class="text-indigo-300 font-bold mb-2">آلية توليد المواضع:</h4>
+                        <code class="text-emerald-400 text-sm">
+                            # استخدام المفتاح كبذرة للتوليد العشوائي<br>
+                            seed = int(hashlib.sha256(key).hexdigest(), 16) % 10**8<br>
+                            np.random.seed(seed)<br>
+                            positions = np.random.permutation(total_pixels)
+                        </code>
+                        <div class="mt-4 text-sm text-gray-400">
+                            هذا يعني أن نفس المفتاح سيولد نفس المواضع العشوائية دائماً، مما يسمح باستخراج البيانات لاحقاً.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المرحلة الخامسة: إخفاء البيانات باستخدام LSB -->
+                <div class="process-step bg-slate-800/30 p-6 rounded-xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-indigo-900/50 rounded-full flex items-center justify-center text-xl font-bold">5</div>
+                        <h3 class="text-xl font-bold text-indigo-300">إخفاء البيانات باستخدام تقنية LSB</h3>
+                    </div>
+                    <p class="mb-4">
+                        يتم إخفاء البتات الثنائية للرسالة المشفرة في البت الأقل أهمية (LSB) من قيم RGB لكل بكسل في الصورة، في المواضع المحددة مسبقاً.
+                    </p>
+
+                    <div class="animation-container bg-slate-900/40 rounded-lg mt-4" id="lsb-animation">
+                        <div class="flex flex-col items-center justify-center h-full p-4">
+                            <div class="text-center mb-6">
+                                <h4 class="text-lg font-bold text-white mb-2">كيف تعمل تقنية LSB</h4>
+                                <p class="text-sm text-gray-300">تغيير البت الأقل أهمية في قيم RGB لا يؤثر بشكل ملحوظ على الصورة</p>
+                            </div>
+                            
+                            <div class="flex flex-wrap justify-center gap-6">
+                                <!-- بكسل قبل التعديل -->
+                                <div class="text-center">
+                                    <div class="demo-pixel bg-blue-600 relative">
+                                        <span class="bit bit-r">1</span>
+                                        <span class="bit bit-g">0</span>
+                                        <span class="bit bit-b">1</span>
+                                        <div class="text-center absolute bottom-1 left-0 right-0 text-xs">بكسل أصلي</div>
+                                    </div>
+                                    <div class="mt-2 text-xs">
+                                        <div class="text-red-400">R: 10101101</div>
+                                        <div class="text-green-400">G: 11001010</div>
+                                        <div class="text-blue-400">B: 10111101</div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center">
+                                    <div class="animated-arrow text-xl text-indigo-400">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </div>
+                                </div>
+
+                                <!-- تعديل البت الأقل أهمية -->
+                                <div class="text-center">
+                                    <div class="demo-pixel bg-blue-600 relative">
+                                        <span class="bit bit-r">0</span>
+                                        <span class="bit bit-g">1</span>
+                                        <span class="bit bit-b">0</span>
+                                        <div class="text-center absolute bottom-1 left-0 right-0 text-xs">بكسل معدل</div>
+                                    </div>
+                                    <div class="mt-2 text-xs">
+                                        <div class="text-red-400">R: 10101100</div>
+                                        <div class="text-green-400">G: 11001011</div>
+                                        <div class="text-blue-400">B: 10111100</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 bg-slate-900/40 p-4 rounded-lg">
+                        <h4 class="text-indigo-300 font-bold mb-2">الشفرة الحقيقية المستخدمة:</h4>
+                        <code class="text-emerald-400 text-sm">
+                            # تعديل البت الأقل أهمية (LSB)<br>
+                            r = (r & 0xFE) | int(binary_text[data_index])<br>
+                            data_index += 1<br>
+                            if data_index < len(binary_text):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;g = (g & 0xFE) | int(binary_text[data_index])<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;data_index += 1<br>
+                            if data_index < len(binary_text):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;b = (b & 0xFE) | int(binary_text[data_index])<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;data_index += 1
+                        </code>
+                    </div>
+                </div>
+
+                <!-- المرحلة السادسة: حفظ الصورة الناتجة -->
+                <div class="process-step bg-slate-800/30 p-6 rounded-xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-indigo-900/50 rounded-full flex items-center justify-center text-xl font-bold">6</div>
+                        <h3 class="text-xl font-bold text-indigo-300">حفظ الصورة الناتجة وحساب مؤشرات الجودة</h3>
+                    </div>
+                    <p class="mb-4">
+                        بعد إخفاء البيانات، يتم حفظ الصورة الناتجة بتنسيق PNG للحفاظ على جودتها. ثم يتم حساب مؤشرات الجودة مثل PSNR و MSE لتقييم جودة الإخفاء.
+                    </p>
+                    <div class="bg-slate-900/40 p-4 rounded-lg">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="text-indigo-300 font-bold mb-2">قياس جودة الإخفاء:</h4>
+                                <ul class="list-disc list-inside text-sm space-y-2">
+                                    <li>
+                                        <span class="text-emerald-400">PSNR (Peak Signal-to-Noise Ratio):</span> 
+                                        <span class="text-gray-300">كلما كانت القيمة أعلى، كلما كانت جودة الإخفاء أفضل.</span>
+                                    </li>
+                                    <li>
+                                        <span class="text-emerald-400">MSE (Mean Square Error):</span> 
+                                        <span class="text-gray-300">كلما كانت القيمة أقل، كلما كان التشويه أقل.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-indigo-300 font-bold mb-2">القيم النموذجية:</h4>
+                                <ul class="list-none text-sm space-y-2">
+                                    <li>
+                                        <span class="text-emerald-400">PSNR الجيد: </span> 
+                                        <span class="text-gray-300">> 40 dB</span>
+                                    </li>
+                                    <li>
+                                        <span class="text-emerald-400">PSNR المتوسط: </span> 
+                                        <span class="text-gray-300">30-40 dB</span>
+                                    </li>
+                                    <li>
+                                        <span class="text-emerald-400">MSE المثالي: </span> 
+                                        <span class="text-gray-300">قريب من الصفر</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- التكامل بين AES وLSB -->
+            <section class="space-y-8 mt-12">
+                <h2 class="text-2xl font-bold gradient-text">التكامل بين AES وLSB</h2>
+                
+                <div class="grid md:grid-cols-2 gap-6 bg-slate-800/30 p-6 rounded-xl">
+                    <!-- التوضيح المرئي -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="fas fa-shield-alt text-2xl text-indigo-400"></i>
+                            <h3 class="text-lg font-bold">طبقة التشفير (AES)</h3>
+                        </div>
+                        <div class="bg-slate-900/40 p-4 rounded-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-green-400">النص الأصلي</span>
+                                <i class="fas fa-arrow-left text-indigo-400"></i>
+                                <span class="text-yellow-400 text-sm">M2U3NDk0Yj... (مشفرة)</span>
+                            </div>
+                            <code class="text-xs break-all">cipher = Fernet(key)<br>encrypted = cipher.encrypt(text.encode())</code>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <i class="fas fa-qrcode text-2xl text-indigo-400"></i>
+                                <h3 class="text-lg font-bold">التحويل الثنائي</h3>
+                            </div>
+                            <div class="bg-slate-900/40 p-4 rounded-lg">
+                                <div class="flex justify-center gap-2 text-xs">
+                                    <span class="text-red-400">01001010</span>
+                                    <span class="text-green-400">11010011</span>
+                                    <span class="text-blue-400">00101101</span>
+                                </div>
+                                <code class="text-xs mt-2">'011001'+<span class="text-indigo-300">'1111111111111110'</span></code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- عملية الدمج -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="fas fa-puzzle-piece text-2xl text-indigo-400"></i>
+                            <h3 class="text-lg font-bold">دمج البيانات في الصورة</h3>
+                        </div>
+                        
+                        <div class="bg-slate-900/40 p-4 rounded-lg">
+                            <div class="pixel-grid">
+                                <!-- بكسل أصلي -->
+                                <div class="pixel-card">
+                                    <div class="demo-pixel bg-blue-600 relative mx-auto">
+                                        <span class="bit bit-r">1</span>
+                                        <span class="bit bit-g">0</span>
+                                        <span class="bit bit-b">1</span>
+                                    </div>
+                                    <div class="pixel-annotation text-center">
+                                        <div class="text-red-400">R: 10101101</div>
+                                        <div class="text-green-400">G: 11001010</div>
+                                        <div class="text-blue-400">B: 10111101</div>
+                                        <div class="text-gray-300 mt-1">قبل التعديل</div>
+                                    </div>
+                                </div>
+                        
+                                <!-- سهم متحرك -->
+                                <div class="flex items-center self-center">
+                                    <i class="fas fa-arrow-left text-2xl text-indigo-400 animated-arrow"></i>
+                                </div>
+                        
+                                <!-- بكسل معدل -->
+                                <div class="pixel-card">
+                                    <div class="demo-pixel bg-blue-600 relative mx-auto">
+                                        <span class="bit bit-r">0</span>
+                                        <span class="bit bit-g">1</span>
+                                        <span class="bit bit-b">0</span>
+                                    </div>
+                                    <div class="pixel-annotation text-center">
+                                        <div class="text-red-400">R: 10101100</div>
+                                        <div class="text-green-400">G: 11001011</div>
+                                        <div class="text-blue-400">B: 10111100</div>
+                                        <div class="text-gray-300 mt-1">بعد التعديل</div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="mt-4 text-center text-sm text-indigo-300">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                التعديلات البصرية لا تتجاوز 0.4% من قيم البكسل الأصلية
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- مخطط تدفق البيانات -->
+                <div class="bg-slate-800/30 p-6 rounded-xl mt-8">
+                    <h3 class="text-lg font-bold text-indigo-300 mb-4">
+                        <i class="fas fa-project-diagram mr-2"></i>
+                        مخطط تدفق البيانات الكامل
+                    </h3>
+                    <div class="bg-slate-900/40 p-4 rounded-lg">
+                        <div class="flex flex-col items-center space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="px-4 py-2 bg-indigo-900/50 rounded-full">النص الأصلي</div>
+                                <i class="fas fa-arrow-down text-indigo-400"></i>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="px-4 py-2 bg-indigo-900/50 rounded-full">AES Encryption</div>
+                                <i class="fas fa-arrow-down text-indigo-400"></i>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="px-4 py-2 bg-indigo-900/50 rounded-full">تحويل ثنائي</div>
+                                <i class="fas fa-arrow-down text-indigo-400"></i>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="px-4 py-2 bg-indigo-900/50 rounded-full">توزيع عشوائي</div>
+                                <i class="fas fa-arrow-down text-indigo-400"></i>
+                            </div>
+                            <div class="px-4 py-2 bg-indigo-900/50 rounded-full">دمج LSB</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- عملية الاستخراج -->
+            <section class="space-y-6 mt-12">
+                <h2 class="text-2xl font-bold gradient-text">عملية استخراج النص من الصورة</h2>
+                <p>
+                    تعمل عملية الاستخراج بشكل عكسي لعملية الإخفاء:
+                </p>
+                <ol class="space-y-4 list-decimal list-inside">
+                    <li class="bg-slate-800/20 p-4 rounded-lg">
+                        <span class="font-bold">تحميل الصورة المشفرة</span> وتهيئة نفس المفتاح السري
+                    </li>
+                    <li class="bg-slate-800/20 p-4 rounded-lg">
+                        <span class="font-bold">توليد نفس المواضع العشوائية</span> باستخدام المفتاح السري
+                    </li>
+                    <li class="bg-slate-800/20 p-4 rounded-lg">
+                        <span class="font-bold">استخراج البتات المخفية</span> من البت الأقل أهمية لكل بكسل في المواضع المحددة
+                    </li>
+                    <li class="bg-slate-800/20 p-4 rounded-lg">
+                        <span class="font-bold">البحث عن علامة النهاية</span> (1111111111111110) للتعرف على نهاية الرسالة
+                    </li>
+                    <li class="bg-slate-800/20 p-4 rounded-lg">
+                        <span class="font-bold">تحويل البتات المستخرجة إلى بايتات</span> ثم استخدامها كنص مشفر
+                    </li>
+                    <li class="bg-slate-800/20 p-4 rounded-lg">
+                        <span class="font-bold">فك تشفير النص</span> باستخدام خوارزمية AES والمفتاح السري
+                    </li>
+                </ol>
+            </section>
+
+            <!-- الميزات الأمنية -->
+            <section class="space-y-6 mt-12">
+                <h2 class="text-2xl font-bold gradient-text">الميزات الأمنية الرئيسية</h2>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-slate-800/20 p-4 rounded-lg">
+                        <h3 class="text-lg font-bold text-indigo-300 mb-2">
+                            <i class="fas fa-random mr-2"></i>
+                            التوزيع العشوائي للبيانات
+                        </h3>
+                        <p class="text-sm">
+                            لا يتم تخزين البيانات بشكل متتالي في الصورة، بل يتم توزيعها عشوائياً باستخدام المفتاح، مما يجعل من المستحيل استخراجها دون معرفة المفتاح الصحيح.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-slate-800/20 p-4 rounded-lg">
+                        <h3 class="text-lg font-bold text-indigo-300 mb-2">
+                            <i class="fas fa-key mr-2"></i>
+                            التشفير المزدوج
+                        </h3>
+                        <p class="text-sm">
+                            يتم تشفير البيانات قبل إخفائها، مما يعني أنه حتى إذا تم اكتشاف وجود رسالة مخفية، فإنها ستظل غير مفهومة بدون المفتاح السري.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-slate-800/20 p-4 rounded-lg">
+                        <h3 class="text-lg font-bold text-indigo-300 mb-2">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            مفاتيح قوية
+                        </h3>
+                        <p class="text-sm">
+                            يتم استخدام مفاتيح Fernet (تعتمد على AES-128) بطول 256 بت، وهي آمنة ضد هجمات القوة الغاشمة باستخدام التقنيات الحالية.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-slate-800/20 p-4 rounded-lg">
+                        <h3 class="text-lg font-bold text-indigo-300 mb-2">
+                            <i class="fas fa-eye-slash mr-2"></i>
+                            خفاء بصري
+                        </h3>
+                        <p class="text-sm">
+                            التغييرات في البت الأقل أهمية غير مرئية للعين البشرية، مما يحافظ على جودة الصورة الظاهرية.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>تجربة  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="/static/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --secondary-color: #0ea5e9;
+      --accent-color: #8b5cf6;
+      --bg-dark: #0f172a;
+      --card-bg: rgba(15, 23, 42, 0.85);
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* Mobile-optimized styles */
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:active {
+      transform: scale(0.98);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .key-container {
+      border: 1px dashed rgba(129, 140, 248, 0.3);
+      background-color: rgba(15, 23, 42, 0.5);
+    }
+
+    .image-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-container img {
+      transition: transform 0.3s ease;
+      width: 100%;
+      border-radius: 12px;
+    }
+
+    .image-container:active img {
+      transform: scale(0.98);
+    }
+
+    .image-hint {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .image-container:active .image-hint {
+      opacity: 1;
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Success message animation */
+    .success-message {
+      animation: fadeInOut 2s ease;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(-10px); }
+      20% { opacity: 1; transform: translateY(0); }
+      80% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+
+    /* Pulse animation for attention */
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* Tap highlight color for better mobile feedback */
+    * {
+      -webkit-tap-highlight-color: rgba(99, 102, 241, 0.2);
+    }
+
+    /* Hide scrollbar but allow scrolling */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Optimize touch targets for mobile */
+    button, a {
+      min-height: 48px;
+    }
+
+    /* Section headers */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .section-header i {
+      background: rgba(79, 70, 229, 0.2);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+    }
+
+    /* Step numbers */
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+  </style>
+</head>
+<body class="py-6">
+  <div class="container mx-auto px-4 max-w-md">
+    <!-- Header -->
+    <header class="text-center mb-8 fade-in">
+      <div class="inline-block mb-4 ">
+        <i class="fas fa-shield-alt text-3xl text-indigo-400" style="filter: drop-shadow(0 0 8px rgba(129, 140, 248, 0.5));"></i>
+      </div>
+      <h1 class="text-3xl font-bold gradient-text leading-tight mb-3">تجربة التطبيق</h1>
+      <p class="text-gray-300 text-sm max-w-xs mx-auto leading-relaxed">أخفينا كلمة داخل الصورة، تقدر تستخرجها؟</p>
+    </header>
+
+   
+
+    <!-- Main Content Cards -->
+    <div class="space-y-6 fade-in" style="animation-delay: 0.2s;">
+      <!-- Encrypted Image Section -->
+      <section class="card p-5 space-y-4">
+        <div class="section-header">
+          <i class="fas fa-image text-indigo-400"></i>
+          <h2 class="text-xl font-semibold text-gray-100">الصورة المشفّرة</h2>
+        </div>
+        <div class="image-container shadow-lg pulse" style="animation-duration: 3s;">
+          <img src="{{ url_for('static', filename='output/encrypted_demo.png') }}"
+               alt="الصورة المشفرة"
+               class="w-full object-cover" 
+               id="encryptedImage" />
+         
+        </div>
+        <div class="flex items-center justify-center gap-2 mt-2">
+          <i class="fas fa-info-circle text-blue-400"></i>
+          <p class="text-xs text-gray-300">اضغط مطولاً على الصورة للحفظ على جهازك</p>
+        </div>
+        
+        
+      </section>
+
+      <!-- Secret Key Section -->
+      <section class="card p-5 space-y-4 fade-in" style="animation-delay: 0.3s;">
+        <div class="section-header">
+          <i class="fas fa-key text-yellow-400"></i>
+          <h2 class="text-xl font-semibold text-gray-100">المفتاح السري</h2>
+        </div>
+        <div class="key-container p-4 rounded-lg">
+          <div id="secretKey" class="text-sky-400 font-mono text-sm break-all py-2 px-1 overflow-x-auto hide-scrollbar">
+            hpixFxPnpdau9xCZTp7yIVEA3bB32uy4xtPYalwc86A=
+          </div>
+          
+          <!-- زر النسخ -->
+          <div class="text-center mt-4">
+            <button id="copyBtn" onclick="copyKey()" class="btn-primary inline-flex items-center justify-center gap-2 px-5 py-3 text-white font-medium rounded-lg w-full">
+              <i class="fas fa-copy"></i>
+              <span>نسخ المفتاح</span>
+            </button>
+            <!-- رسالة نجاح النسخ -->
+            <div class="relative h-6 mt-2">
+              <div id="copySuccess" class="hidden success-message absolute top-0 left-1/2 transform -translate-x-1/2 bg-green-500 bg-opacity-90 text-white px-3 py-1 rounded-lg text-xs">
+                <i class="fas fa-check ml-1"></i>تم نسخ المفتاح
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How to Use Section -->
+      <section class="card p-5 space-y-4 fade-in" style="animation-delay: 0.4s;">
+        <div class="section-header">
+          <i class="fas fa-info-circle text-blue-400"></i>
+          <h2 class="text-xl font-semibold text-gray-100">كيفية الاستخدام</h2>
+        </div>
+        <div class="text-gray-300 text-sm space-y-4">
+          <div class="flex items-start">
+            <span class="step-number">1</span>
+            <p> احفظ الصورة المشفرة على جهازك</p>
+          </div>
+          <div class="flex items-start">
+            <span class="step-number">2</span>
+            <p>  انسخ المفتاح السري بالضغط على زر "نسخ المفتاح" </p>
+          </div>
+          <div class="flex items-start">
+            <span class="step-number">3</span>
+            <p>استخدم المفتاح والصورة في تطبيقنا لاستخراج الرسالة المخفية</p>
+          </div>
+        </div>
+        
+      </section>
+
+      <!-- Buttons -->
+      <div class="flex flex-col gap-4 pt-2 fade-in" style="animation-delay: 0.5s;">
+        <a href="/" class="btn-primary flex items-center justify-center gap-2 px-4 py-3 text-white font-medium rounded-lg text-center">
+          <i class="fas fa-home"></i>
+          <span>العودة للصفحة الرئيسية</span>
+        </a>
+        
+        <a href="/about" class="btn-secondary flex items-center justify-center gap-2 px-4 py-3 text-gray-200 font-medium rounded-lg text-center">
+          <i class="fas fa-info-circle"></i>
+          <span>عن المشروع</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-12 text-center text-gray-500 text-xs fade-in" style="animation-delay: 0.6s;">
+      <div class="mb-3">
+        
+      </div>
+      <p>مشروع التخرج - قسم الأمن السيبراني</p>
+   
+    </footer>
+  </div>
+
+  <script>
+    // وظيفة نسخ المفتاح
+    function copyKey() {
+      const keyText = document.getElementById("secretKey").innerText.trim();
+      const copyBtn = document.getElementById("copyBtn");
+      const success = document.getElementById("copySuccess");
+     
+      // نسخ النص إلى الحافظة
+      navigator.clipboard.writeText(keyText)
+        .then(() => {
+          // إظهار رسالة النجاح
+          success.classList.remove("hidden");
+         
+          // تغيير حالة الزر مؤقتًا
+          copyBtn.innerHTML = '<i class="fas fa-check"></i><span>تم النسخ</span>';
+          copyBtn.classList.add("bg-green-600");
+          
+          // إعادة حالة الزر بعد فترة
+          setTimeout(() => {
+            success.classList.add("hidden");
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i><span>نسخ المفتاح</span>';
+            copyBtn.classList.remove("bg-green-600");
+          }, 2000);
+        })
+        .catch(err => {
+          alert("حدث خطأ أثناء نسخ المفتاح: " + err);
+        });
+    }
+
+    // وظيفة تحميل الصورة عن طريق الزر
+ 
+    // وظيفة حفظ الصورة عند الضغط المطول
+    let pressTimer;
+    const img = document.getElementById('encryptedImage');
+    
+    img.addEventListener('touchstart', function() {
+      pressTimer = window.setTimeout(function() {
+        downloadImage();
+      }, 500);
+      return false;
+    });
+    
+    img.addEventListener('touchend', function() {
+      clearTimeout(pressTimer);
+      return false;
+    });
+    
+    // للكمبيوتر (الضغط بزر الفأرة الأيمن واختيار حفظ)
+    img.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      downloadImage();
+    });
+    
+    // وظيفة تنزيل الصورة
+   
+      
+      // عرض رسالة تأكيد
+     
+    
+    // تحسين تجربة المستخدم باستخدام التأخير في التحميل
+    document.addEventListener('DOMContentLoaded', function() {
+      // تمرير بسلاسة للأعلى عند تحديث الصفحة
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      
+      // إيقاف انيميشن النبض بعد فترة
+      setTimeout(() => {
+        document.querySelector('.pulse').classList.remove('pulse');
+      }, 6000);
+      
+      // إضافة تأثير التلاشي للعناصر تباعًا
+      const elements = document.querySelectorAll('.fade-in');
+      elements.forEach((el, index) => {
+        el.style.animationDelay = (0.1 + index * 0.1) + 's';
+      });
+      
+      console.log('Page fully loaded and enhanced');
+    });
+  </script>
+</body>
+</html>

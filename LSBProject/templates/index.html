@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام إخفاء النصوص في الصور</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="manifest" href="/static/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=Cairo:wght@400;600;700&display=swap');
+    :root {
+      --primary-gradient: linear-gradient(135deg, #6366f1, #3b82f6);
+      --secondary-gradient: linear-gradient(135deg, #8b5cf6, #6366f1);
+      --accent-gradient: linear-gradient(135deg, #f97316, #ec4899);
+      --dark-background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --card-bg: rgba(30, 41, 59, 0.8);
+      --accent-color: #6366f1;
+      --accent-light: #818cf8;
+      --text-color: #e2e8f0;
+    }
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, rgba(15, 23, 42, 0.8) 90%),
+                       linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: var(--text-color);
+      line-height: 1.6;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+    h1, h2, h3 {
+      font-family: 'Cairo', sans-serif;
+    }
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .particle {
+      position: absolute;
+      background: rgba(99, 102, 241, 0.2);
+      border-radius: 50%;
+      animation: float-particle 20s infinite ease-in-out;
+    }
+    @keyframes float-particle {
+      0%, 100% { transform: translate(0, 0); opacity: 0.1; }
+      25% { transform: translate(100px, 50px); opacity: 0.3; }
+      50% { transform: translate(50px, 100px); opacity: 0.2; }
+      75% { transform: translate(-50px, 30px); opacity: 0.1; }
+    }
+    .bg-glow {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.15);
+      filter: blur(40px);
+      z-index: -1;
+    }
+    .glass-morphism {
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.125);
+      box-shadow: 0 10px 40px rgba(31, 38, 135, 0.4);
+      border-radius: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .glass-morphism:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 50px rgba(31, 38, 135, 0.5);
+    }
+    .gradient-text {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .gradient-text-small {
+      background: var(--secondary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .elegant-input {
+      background: rgba(30, 41, 59, 0.5) !important;
+      border: 2px solid rgba(129, 140, 248, 0.3) !important;
+      transition: all 0.3s ease;
+    }
+    .elegant-input:focus {
+      border-color: var(--accent-color) !important;
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+    }
+    .file-dropzone {
+      border: 2px dashed var(--accent-light);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .file-dropzone:hover {
+      border-color: var(--accent-color);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    .tabs-container {
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 1rem;
+  padding: 0.25rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.tabs-container::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 5%;
+  right: 5%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+.card {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    transition: all 0.4s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.input-area {
+    position: relative;
+    border: 2px dashed #818cf8;
+    background: rgba(30, 41, 59, 0.4);
+    transition: all 0.3s ease;
+}
+
+.input-area:hover {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: #a5b4fc;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: rgba(30, 41, 59, 0.4);
+    border-radius: 8px;
+}
+
+.file-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.tab {
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  border-radius: 0.75rem;
+  z-index: 1;
+}
+
+.tab.active {
+  border-bottom: none;
+}
+
+.tab.active::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 80%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+  z-index: 1;
+}
+
+.tab::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(99, 102, 241, 0) 100%);
+  border-radius: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.tab.active::after {
+  opacity: 1;
+}
+
+.tab:hover:not(.active)::after {
+  opacity: 0.3;
+}
+
+.tab i {
+  transition: all 0.3s ease;
+}
+
+.tab.active i {
+  color: #a5b4fc;
+  filter: drop-shadow(0 0 5px rgba(129, 140, 248, 0.8));
+}
+
+.tab-label {
+  position: relative;
+  z-index: 2;
+}
+
+.tab-indicator {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.tab.active .tab-indicator {
+  opacity: 1;
+  width: 60%;
+  left: 20%;
+}
+    .about-card {
+      transition: all 0.3s ease;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .about-card:hover {
+      transform: translateY(-5px);
+      background: rgba(79, 70, 229, 0.15);
+      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2);
+    }
+    .about-icon {
+      background: rgba(99, 102, 241, 0.15);
+      height: 60px;
+      width: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+    .feature-icon {
+      font-size: 1.5rem;
+      color: var(--accent-light);
+    }
+    .footer-link {
+      transition: all 0.3s ease;
+    }
+    .footer-link:hover {
+      color: var(--accent-light);
+      transform: translateY(-2px);
+    }
+    
+    .icon-glow {
+      filter: drop-shadow(0 0 3px rgba(129, 140, 248, 0.5));
+    }
+    .hidden {
+      display: none !important;
+    }
+    .animated-gradient {
+      background-size: 400% 400%;
+      animation: gradient-shift 15s ease infinite;
+    }
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .floating {
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .pulsate {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .shine-effect {
+      position: relative;
+      overflow: hidden;
+    }
+    .shine-effect::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.05) 40%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.05) 60%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(30deg);
+      animation: shine 6s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(30deg); }
+      100% { transform: translateX(100%) rotate(30deg); }
+    }
+    .file-dropzone::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border: 2px dashed var(--accent-light);
+      border-radius: 0.75rem;
+      pointer-events: none;
+    }
+    .file-preview {
+      border: none !important; 
+      max-width: 90%;
+      margin: 1rem auto;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4f46e5, #4338ca);
+      transform: translateY(-2px);
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover::after {
+      opacity: 0.5;
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      transform: translateY(-2px);
+    }
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--accent-light);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      transition: all 0.3s ease;
+    }
+    .badge:hover {
+      background: rgba(99, 102, 241, 0.3);
+      transform: scale(1.05);
+    }
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: rgba(15, 23, 42, 0.95);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    .security-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      transition: all 0.3s ease;
+    }
+    .security-card:hover {
+      background: rgba(30, 41, 59, 0.7);
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+    .form-header {
+      position: relative;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary-gradient);
+      border-radius: 3px;
+    }
+    .progress-step {
+      position: relative;
+      padding-left: 1.5rem;
+    }
+    .progress-step::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-color);
+    }
+    .progress-line {
+      position: absolute;
+      left: 6px;
+      top: 1rem;
+      bottom: -0.5rem;
+      width: 2px;
+      background: rgba(99, 102, 241, 0.3);
+    }
+    .checkbox-custom {
+      position: relative;
+      padding-right: 2rem;
+    }
+    .checkbox-custom input {
+      position: absolute;
+      opacity: 0;
+      height: 0;
+      width: 0;
+    }
+    .checkmark {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 20px;
+      width: 20px;
+      background-color: rgba(30, 41, 59, 0.5);
+      border: 2px solid rgba(99, 102, 241, 0.3);
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    .checkbox-custom:hover input ~ .checkmark {
+      background-color: rgba(99, 102, 241, 0.1);
+    }
+    .checkbox-custom input:checked ~ .checkmark {
+      background-color: var(--accent-color);
+    }
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+    .checkbox-custom input:checked ~ .checkmark:after {
+      display: block;
+    }
+    .checkbox-custom .checkmark:after {
+      left: 6px;
+      top: 2px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+    text-align: center;
+    min-width: 300px;
+    max-width: 80%;
+  }
+  
+  .notification.show {
+    transform: translateX(-50%) translateY(0);
+  }
+  
+  .notification.success {
+    background-color: rgba(46, 160, 67, 0.85);
+    color: white;
+  }
+  
+  .file-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+.file-info:hover {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.filename {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.filesize, .dimensions {
+  color: #94a3b8;
+  font-size: 0.9em;
+}
+
+  .notification.error {
+    background-color: rgba(218, 54, 51, 0.85);
+    color: white;
+  }
+  
+  .notification.warning {
+    background-color: rgba(226, 164, 0, 0.85);
+    color: white;
+  }
+  
+  .notification.info {
+    background-color: rgba(56, 114, 224, 0.85);
+    color: white;
+  }
+  </style>
+</head>
+<body class="p-4 md:p-8">
+  <div class="particles" id="particles"></div>
+
+  <div class="container mx-auto max-w-6xl relative">
+    <div class="bg-glow" style="top: 10%; left: 20%;"></div>
+    <div class="bg-glow" style="top: 30%; right: 20%;"></div>
+  <div class="container mx-auto max-w-6xl">
+    <header class="text-center mb-12">
+      <div class="mb-4 flex justify-center">
+        <div class="w-20 h-20 bg-indigo-900/30 rounded-full flex items-center justify-center mb-2 floating relative">
+          <i class="fas fa-shield-alt text-4xl text-indigo-400 icon-glow"></i>
+          <div class="absolute top-0 left-0 w-full h-full rounded-full bg-indigo-500/20 animate-ping"></div>
+        </div>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold mb-6 gradient-text animated-gradient" style="line-height: 1.4; padding-bottom: 0.2em;">
+        الإخفاء الآمن  
+      </h1>
+      <p class="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+        أداة لإخفاء النصوص السرية داخل الصور باستخدام تقنية 
+        <span class="tooltip">
+          LSB
+          <span class="tooltip-text">Least Significant Bit - تقنية تعديل البت الأقل أهمية في بيانات الصورة دون تأثير ملحوظ على جودتها</span>
+        </span>
+      </p>
+      
+      <div class="flex justify-center mb-10">
+        <div class="inline-flex tabs-container">
+          <div id="encrypt-tab" class="tab active py-4 px-10 flex items-center" onclick="switchTab('encrypt')">
+            <i class="fas fa-lock ml-3 text-indigo-400"></i>
+            <span class="tab-label">تشفير</span>
+            <span class="tab-indicator"></span>
+          </div>
+          <div id="decrypt-tab" class="tab py-4 px-10 flex items-center" onclick="switchTab('decrypt')">
+            <i class="fas fa-unlock ml-3 text-indigo-400"></i>
+            <span class="tab-label">فك التشفير</span>
+            <span class="tab-indicator"></span>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <div class="grid grid-cols-1 max-w-4xl mx-auto my-8">
+      <!-- قسم التشفير -->
+      <div id="encrypt-section" class="card p-4 sm:p-6 md:p-8 lg:p-10 w-full rounded-2xl shadow-lg">
+        <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 md:mb-8 text-indigo-300 flex items-center ">
+          <i class="fas fa-lock ml-2 sm:ml-3 text-indigo-400"></i>
+          تشفير النص
+        </h2>
+        <form action="/encrypt" method="POST" enctype="multipart/form-data" class="space-y-4 sm:space-y-6 md:space-y-8">
+          <!-- اختيار الصورة -->
+          <div>
+            <label class="block text-base sm:text-lg mb-2 sm:mb-4 flex items-center flex-wrap">
+              <i class="fas fa-image ml-2 sm:ml-3 text-indigo-400"></i>
+              اختر الصورة الأصلية
+              <span class="mr-2 badge text-xs sm:text-sm">مطلوب</span>
+            </label>
+            <div class="input-area rounded-lg sm:rounded-xl p-4 sm:p-6 md:p-8 cursor-pointer hover:shadow-lg transition-all ease-in-out duration-300"
+                 onclick="document.getElementById('encrypt-image').click()">
+              <!-- المنطقة التي يتم فيها سحب الملف -->
+              <div class="text-gray-400 flex flex-col items-center">
+                <i class="fas fa-cloud-upload-alt text-3xl sm:text-4xl md:text-5xl mb-2 sm:mb-3 text-indigo-400 icon-glow pulsate"></i>
+                <span class="mb-1 sm:mb-2 text-sm sm:text-base">اسحب الصورة هنا أو اضغط للاختيار</span> 
+                
+              </div>
+              <input type="file" id="encrypt-image" name="image" accept="image/*" class="hidden" required>
+              
+              <!-- معاينة الصورة داخل منطقة الإدخال -->
+              <div id="encrypt-preview" class="mt-4 sm:mt-6 rounded-lg overflow-hidden file-preview"></div>
+              
+              <!-- معلومات الملف داخل منطقة الإدخال -->
+              <div id="encrypt-file-info" class="file-info hidden">
+                <i class="fas fa-file-image text-indigo-400 ml-2"></i>
+                <span class="filename font-medium"></span>
+                <span class="filesize text-gray-400 mr-2"></span>
+                <span class="dimensions text-gray-400 mr-2"></span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- رفع ملف نصي -->
+          <div>
+            <label class="block text-base sm:text-lg mb-2 sm:mb-4 flex items-center flex-wrap">
+              <i class="fas fa-file-alt ml-2 sm:ml-3 text-purple-400"></i>
+              رفع ملف نصي (.txt)
+              <span class="mr-2 badge bg-green-900/30 text-green-400 border-green-600/30 text-xs sm:text-sm">اختياري</span>
+            </label>
+            <div class="input-area rounded-lg sm:rounded-xl p-4 sm:p-6 text-center cursor-pointer transition-all ease-in-out duration-300"
+                 onclick="document.getElementById('secret-file').click()">
+              <div class="text-gray-400 flex flex-col items-center">
+                <i class="fas fa-file-upload text-2xl sm:text-3xl md:text-4xl mb-2 sm:mb-4 text-purple-400 icon-glow"></i>
+                <span class="mb-1 sm:mb-2 text-sm sm:text-base">اسحب الملف هنا أو اضغط للاختيار</span>
+              </div>
+              <input type="file" id="secret-file" name="secret_file" accept=".txt" class="hidden">
+              
+              <!-- معلومات الملف النصي -->
+              <div id="secret-filename" class="text-xs sm:text-sm text-gray-400 mt-3"></div>
+            </div>
+          </div>
+          
+          <!-- إدخال النص -->
+          <div>
+            <label class="block text-base sm:text-lg mb-2 sm:mb-4 flex items-center flex-wrap">
+              <i class="fas fa-keyboard ml-2 sm:ml-3 text-blue-400"></i>
+              أو أدخل النص مباشرةً
+              <span class="mr-2 tooltip">
+                <i class="fas fa-info-circle text-gray-400"></i>
+                <span class="tooltip-text text-xs sm:text-sm">أدخل النص السري الذي تريد إخفاءه في الصورة. سيتم تجاهل هذا الحقل إذا قمت برفع ملف نصي</span>
+              </span>
+            </label>
+            <textarea name="text" class="w-full elegant-input text-white p-3 sm:p-4 rounded-lg"
+                      rows="3" placeholder="اكتب النص السري هنا..."></textarea>
+          </div>
+          
+          <!-- المفتاح السري -->
+          <div>
+            <label class="block text-base sm:text-lg mb-2 sm:mb-4 flex items-center flex-wrap">
+              <i class="fas fa-key ml-2 sm:ml-3 text-yellow-400"></i>
+              المفتاح السري (44 حرفًا base64)
+              <span class="mr-2 badge text-xs sm:text-sm">مطلوب</span>
+            </label>
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+              <div class="relative flex-grow">
+                <input type="text" id="key-input" name="key" 
+                       class="w-full elegant-input text-white p-3 sm:p-4 rounded-lg"
+                       placeholder="أدخل مفتاح Fernet صالح" 
+                       minlength="44" maxlength="44" required 
+                       pattern="[A-Za-z0-9+/=]{44}">
+              </div>
+              
+              <div class="flex gap-2 mt-2 sm:mt-0">
+                <!-- زر النسخ -->
+                <button type="button" id="copy-key" 
+                        class="flex-1 sm:flex-initial flex items-center justify-center px-3 sm:px-4 py-2 sm:py-3 
+                               bg-gradient-to-r from-indigo-600 to-indigo-500 
+                               hover:from-indigo-700 hover:to-indigo-600 
+                               text-white rounded-lg transition-all 
+                               shadow-md hover:shadow-lg">
+                    <i class="fas fa-copy text-lg"></i>
+                </button>
+                
+                <!-- زر التوليد -->
+                <button type="button" 
+                        id="generate-key" 
+                        class="flex-1 sm:flex-initial px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 
+                              text-black rounded-lg shadow-lg flex items-center justify-center
+                              gap-1 sm:gap-2 hover:from-yellow-500 hover:to-yellow-700 transition-all
+                              min-w-[100px] sm:min-w-[150px]">
+                    <i class="fas fa-key"></i>
+                    <span class="text-sm sm:text-base">توليد مفتاح</span>
+                </button>
+              </div>
+            </div>
+            <div class="text-xs text-gray-400 mt-1 sm:mt-2 px-1 sm:px-2">
+                المفتاح يجب أن يكون 44 حرفًا بتنسيق Base64
+            </div>
+          </div>
+          
+          <!-- أزرار العمليات -->
+          <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
+            <button type="submit" class="btn-primary flex-1 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-all flex items-center justify-center text-sm sm:text-base">
+              <i class="fas fa-shield-alt ml-2 sm:ml-3"></i>
+              تشفير النص
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+      
+    <!-- قسم فك التشفير -->
+    <div id="decrypt-section" class="card p-4 sm:p-6 md:p-8 lg:p-10 w-full rounded-2xl shadow-lg hidden mt-6 sm:mt-8 md:mt-10">
+      <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 md:mb-8 text-indigo-300 flex items-center ">
+        <i class="fas fa-unlock ml-2 sm:ml-3 text-indigo-400"></i>
+        فك التشفير
+      </h2>
+      <form id="decrypt-form" class="space-y-4 sm:space-y-6 md:space-y-8">
+        <!-- اختيار الصورة المشفرة -->
+        <div>
+          <label class="block text-base sm:text-lg mb-2 sm:mb-4 flex items-center flex-wrap">
+            <i class="fas fa-image ml-2 sm:ml-3 text-indigo-400"></i>
+            اختر الصورة المشفرة
+            <span class="mr-2 badge text-xs sm:text-sm">مطلوب</span>
+          </label>
+          <div class="input-area rounded-lg sm:rounded-xl p-4 sm:p-6 md:p-8 text-center cursor-pointer hover:shadow-lg transition-all ease-in-out duration-300"
+               onclick="document.getElementById('decrypt-image').click()">
+            <div class="text-gray-400 flex flex-col items-center">
+              <i class="fas fa-cloud-download-alt text-3xl sm:text-4xl md:text-5xl mb-2 sm:mb-3 text-indigo-400 icon-glow pulsate"></i>
+              <span class="mb-1 sm:mb-2 text-sm sm:text-base">اسحب الصورة هنا أو اضغط للاختيار</span>
+              <span class="text-xs text-gray-500">يجب أن تكون الصورة قد تم تشفيرها باستخدام هذا التطبيق</span>
+            </div>
+            <input type="file" id="decrypt-image" name="image" accept="image/*" class="hidden" required>
+            
+            <!-- معاينة الصورة داخل منطقة الإدخال -->
+            <div id="decrypt-preview" class="mt-4 sm:mt-6 rounded-lg overflow-hidden file-preview"></div>
+            
+            <!-- معلومات الملف داخل منطقة الإدخال -->
+            <div id="decrypt-file-info" class="file-info hidden">
+              <i class="fas fa-file-image text-indigo-400 ml-2"></i>
+              <span class="filename font-medium"></span>
+              <span class="filesize text-gray-400 mr-2"></span>
+              <span class="dimensions text-gray-400 mr-2"></span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- المفتاح السري -->
+        <div>
+          <label class="block text-base sm:text-lg mb-2 sm:mb-4 flex items-center flex-wrap">
+            <i class="fas fa-key ml-2 sm:ml-3 text-yellow-400"></i>
+            المفتاح السري
+            <span class="mr-2 badge text-xs sm:text-sm">مطلوب</span>
+          </label>
+          <div class="relative">
+            <input type="text" id="decrypt-key-input" name="key" class="w-full elegant-input text-white p-3 sm:p-4 rounded-lg pr-10 sm:pr-12"
+                   placeholder="أدخل المفتاح المستخدم في التشفير" required>
+            <button type="button" id="show-decrypt-key" class="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white">
+            </button>
+          </div>
+        </div>
+        
+        <!-- زر استخراج النص -->
+        <button type="submit" class="w-full btn-primary text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg transition-all flex items-center justify-center mt-4 sm:mt-6 text-sm sm:text-base">
+          <i class="fas fa-search ml-2 sm:ml-3"></i>
+          استخراج النص
+        </button>
+      </form>
+      
+      <!-- نتائج فك التشفير -->
+      <div id="decrypt-results" class="mt-6 sm:mt-8"></div>
+    </div>
+
+
+    <!-- الفوتر -->
+    <footer class="mt-20 py-10 bg-gray-900/50 border-t border-indigo-900/30">
+      <div class="container mx-auto max-w-6xl px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center mb-10">
+          <div class="text-center md:text-right">
+            <div class="text-2xl font-bold gradient-text mb-2">الإخفاء الآمن</div>
+            <p class="text-gray-400 text-sm">النسخة 2.5 - نظام لإخفاء النصوص في الصور</p>
+            <p class="text-gray-400 text-sm"> MK </p>
+           
+          </div>
+          
+          <div class="flex justify-center">
+            <a href="/key" class="footer-link flex items-center bg-indigo-900/20 hover:bg-indigo-900/30 py-2 px-4 rounded-lg transition-all">
+              <i class="fas fa-key ml-1 sm:ml-2"></i>
+              إدارة المفاتيح السرية
+            </a>
+          </div>
+
+          <div class="flex justify-center">
+            <a href="/instructions" class="footer-link flex items-center bg-indigo-900/20 hover:bg-indigo-900/30 py-2 px-4 rounded-lg transition-all">
+              <i class="fas fa-book ml-2"></i>
+              دليل الاستخدام
+            </a>
+          </div>
+          
+          <div class="flex justify-center md:justify-start">
+            <a href="https://github.com/ujjcl/LSB" target="_blank" 
+               class="footer-link bg-indigo-900/30 px-5 py-3 rounded-lg hover:bg-indigo-900/50 transition-all flex items-center">
+              <i class="fab fa-github ml-2 text-lg"></i>
+              GitHub
+            </a>
+          </div>
+        </div>
+        
+      </div>
+    </footer>
+  </div>
+
+  <script>
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const keyInput = document.getElementById('key-input');
+    const generateKeyBtn = document.getElementById('generate-key');
+    const copyKeyBtn = document.getElementById('copy-key');
+    
+    // دالة لتوليد مفتاح Fernet جديد
+    async function generateFernetKey() {
+      try {
+        // استخدام Fetch API للحصول على مفتاح جديد من الخادم
+        const response = await fetch('/api/generate_key', {
+          method: 'GET',
+        });
+        
+        if (!response.ok) {
+          throw new Error('فشل في الحصول على مفتاح جديد');
+        }
+        
+        const data = await response.json();
+        return data.key;
+      } catch (error) {
+        // في حالة الفشل، إنشاء مفتاح باستخدام JavaScript (كحل بديل)
+        console.error('خطأ في توليد المفتاح:', error);
+        // توليد 32 بايت عشوائية
+        const array = new Uint8Array(32);
+        window.crypto.getRandomValues(array);
+        // تحويل البايتات إلى سلسلة base64
+        let base64 = btoa(String.fromCharCode.apply(null, array));
+        // التأكد من أن المفتاح بالتنسيق المناسب لـ Fernet
+        base64 = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '') + '=';
+        return base64;
+      }
+    }
+    
+    // دالة لعرض رسالة نجاح أو فشل
+    function showMessage(message, isError = false) {
+      const messageElement = document.createElement('div');
+      messageElement.textContent = message;
+      messageElement.className = isError ? 'error-message' : 'success-message';
+      messageElement.style.position = 'fixed';
+      messageElement.style.top = '20px';
+      messageElement.style.right = '20px';
+      messageElement.style.padding = '10px 20px';
+      messageElement.style.backgroundColor = isError ? '#f44336' : '#4CAF50';
+      messageElement.style.color = 'white';
+      messageElement.style.borderRadius = '4px';
+      messageElement.style.zIndex = '1000';
+      
+      document.body.appendChild(messageElement);
+      
+      // إزالة الرسالة بعد 3 ثوانٍ
+      setTimeout(() => {
+        messageElement.style.opacity = '0';
+        messageElement.style.transition = 'opacity 0.5s';
+        setTimeout(() => document.body.removeChild(messageElement), 500);
+      }, 3000);
+    }
+    
+    // ربط زر توليد المفتاح بالدالة
+    generateKeyBtn.addEventListener('click', async function() {
+      try {
+        generateKeyBtn.disabled = true;
+        generateKeyBtn.textContent = 'جاري التوليد...';
+        
+        const key = await generateFernetKey();
+        keyInput.value = key;
+        
+        showMessage('تم توليد المفتاح بنجاح');
+      } catch (error) {
+        showMessage('فشل في توليد المفتاح: ' + error.message, true);
+      } finally {
+        generateKeyBtn.disabled = false;
+        generateKeyBtn.textContent = 'توليد مفتاح جديد';
+      }
+    });
+    
+    // ربط زر نسخ المفتاح بالدالة
+    copyKeyBtn.addEventListener('click', function() {
+      if (!keyInput.value) {
+        showMessage('لا يوجد مفتاح للنسخ', true);
+        return;
+      }
+      
+      // نسخ المفتاح إلى الحافظة
+      keyInput.select();
+      keyInput.setSelectionRange(0, 99999); // للأجهزة المحمولة
+      
+      try {
+        document.execCommand('copy');
+        showMessage('تم نسخ المفتاح بنجاح');
+      } catch (err) {
+        // طريقة بديلة للنسخ باستخدام Clipboard API
+        navigator.clipboard.writeText(keyInput.value)
+          .then(() => showMessage('تم نسخ المفتاح بنجاح'))
+          .catch(err => showMessage('فشل في نسخ المفتاح: ' + err.message, true));
+      }
+    });
+    
+    // توليد مفتاح افتراضي عند تحميل الصفحة (اختياري)
+    // generateKeyBtn.click();
+});
+
+document.getElementById('secret-file').addEventListener('change', function(e) {
+  const info = document.getElementById('secret-filename');
+  if (e.target.files.length) {
+    info.textContent = 'الملف المختار: ' + e.target.files[0].name;
+  } else {
+    info.textContent = ''; // عند إزالة الاختيار
+  }
+});
+
+function createParticles() {
+      const particles = document.getElementById('particles');
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.width = Math.random() * 5 + 2 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particles.appendChild(particle);
+      }
+    }
+    createParticles();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('ServiceWorker registered'))
+        .catch(err => console.log('ServiceWorker failed: ', err));
+    }
+    function switchTab(tab) {
+      document.getElementById('encrypt-section').classList.toggle('hidden', tab !== 'encrypt');
+      document.getElementById('decrypt-section').classList.toggle('hidden', tab !== 'decrypt');
+      document.querySelectorAll('.tab').forEach(t => 
+          t.classList.toggle('active', t.id === `${tab}-tab`)
+      );
+    }
+
+    function handleFile(file, type) {
+  const preview = document.querySelector(`#${type}-preview`);
+  const fileInfo = document.getElementById(`${type}-file-info`);
+  const reader = new FileReader();
+  
+  reader.onload = (e) => {
+    // إنشاء عنصر صورة لاستخراج الأبعاد
+    const img = new Image();
+    img.onload = function() {
+      // عرض معلومات الصورة
+      fileInfo.classList.remove('hidden');
+      fileInfo.querySelector('.filename').textContent = file.name;
+      fileInfo.querySelector('.filesize').textContent = formatFileSize(file.size);
+      
+      // إضافة معلومات الأبعاد
+      if (!fileInfo.querySelector('.dimensions')) {
+        const dimensionsSpan = document.createElement('span');
+        dimensionsSpan.className = 'dimensions text-gray-400 mr-2';
+        fileInfo.appendChild(dimensionsSpan);
+      }
+      fileInfo.querySelector('.dimensions').textContent = `${img.width} × ${img.height}`;
+    };
+    
+    img.src = e.target.result;
+    preview.innerHTML = `<img src="${e.target.result}" class="w-full h-auto object-contain rounded-lg shadow-lg" alt="معاينة الصورة">`;
+  };
+  
+  reader.readAsDataURL(file);
+}
+
+// دالة لتنسيق حجم الملف
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' بايت';
+  else if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' كيلوبايت';
+  else return (bytes / 1048576).toFixed(2) + ' ميجابايت';
+}
+
+    document.querySelectorAll('.file-dropzone').forEach(element => {
+      element.addEventListener('dragover', e => {
+        e.preventDefault();
+        element.classList.add('border-indigo-500');
+      });
+      
+      element.addEventListener('dragleave', () => {
+        element.classList.remove('border-indigo-500');
+      });
+      
+      element.addEventListener('drop', e => {
+        e.preventDefault();
+        element.classList.remove('border-indigo-500');
+        const files = e.dataTransfer.files;
+        
+        if (files[0]) {
+          const input = element.querySelector('input[type="file"]');
+          if (input) {
+            input.files = files;
+            const fileType = input.id.includes('encrypt') ? 'encrypt' : 'decrypt';
+            handleFile(files[0], fileType);
+            
+            if (input.id === 'secret-file') {
+              document.getElementById('secret-filename').textContent = 
+                  'الملف المختار: ' + files[0].name;
+            }
+          }
+        }
+      });
+    });
+
+    document.getElementById('decrypt-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const resultsContainer = document.getElementById('decrypt-results');
+      
+      try {
+        if (!form.image.files[0] || !form.key.value.trim()) {
+          throw new Error('الرجاء اختيار الصورة وإدخال المفتاح');
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin ml-2"></i> جاري الاستخراج...`;
+        
+        const formData = new FormData(form);
+        const response = await fetch('/decrypt', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) throw new Error('خطأ في الخادم (رمز: ' + response.status + ')');
+        
+        const result = await response.json();
+        
+        resultsContainer.innerHTML = `
+          <h2 class="text-2xl font-bold mb-4 text-indigo-300 flex items-center">
+            <i class="fas fa-scroll ml-2"></i>
+            النص المستخرج
+          </h2>
+          ${result.decrypted_text ? `
+            <div class="bg-green-900/20 p-4 rounded-lg mb-4 border border-indigo-300">
+              <p class="break-words whitespace-pre-wrap">${result.decrypted_text}</p>
+            </div>
+          ` : ''}
+          ${result.error ? `
+            <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700">
+              <p class="text-red-400">${result.error}</p>
+            </div>
+          ` : ''}
+          <button onclick="resetDecryption()" class="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-all">
+            <i class="fas fa-sync-alt ml-2"></i> إعادة المحاولة
+          </button>
+        `;
+
+        switchTab('decrypt');
+
+      } catch (error) {
+        resultsContainer.innerHTML = `
+          <div class="bg-red-900/20 p-4 rounded-lg mb-4 border border-red-700">
+            <p class="text-red-400">${error.message}</p>
+          </div>
+        `;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<i class="fas fa-search ml-2"></i> استخراج النص`;
+      }
+    });
+
+    function resetDecryption() {
+      document.getElementById('decrypt-form').reset();
+      document.getElementById('decrypt-preview').innerHTML = '';
+      document.getElementById('decrypt-results').innerHTML = '';
+    }
+
+    ['encrypt', 'decrypt'].forEach(type => {
+      document.getElementById(`${type}-image`).addEventListener('change', e => {
+        if (e.target.files[0]) handleFile(e.target.files[0], type);
+      });
+    });
+
+    // إدارة عرض المفتاح
+    document.getElementById('show-key').addEventListener('click', function() {
+      const keyInput = document.getElementById('key-input');
+      keyInput.type = keyInput.type === 'password' ? 'text' : 'password';
+      this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+
+    document.getElementById('show-decrypt-key').addEventListener('click', function() {
+      const keyInput = document.getElementById('decrypt-key-input');
+      keyInput.type = keyInput.type === 'password' ? 'text' : 'password';
+      this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+
+    
+
+    
+  </script>
+</body>
+</html>

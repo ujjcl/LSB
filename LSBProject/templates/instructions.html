@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل الاستخدام</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="manifest" href="/static/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #3b82f6);
+            --dark-background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--dark-background);
+            min-height: 100vh;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            box-shadow: 0 10px 40px rgba(31, 38, 135, 0.4);
+            border-radius: 1.5rem;
+        }
+
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .section-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="container mx-auto max-w-4xl">
+        <div class="glass-panel p-8">
+            <div class="flex items-center gap-4 mb-12">
+                <div class="w-16 h-16 bg-indigo-900/30 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-book-open text-3xl text-indigo-400"></i>
+                </div>
+                <h1 class="text-4xl font-bold gradient-text">دليل استخدام النظام</h1>
+            </div>
+
+            <div class="space-y-10">
+                <div class="section-card p-6 rounded-xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white">1</div>
+                        <h3 class="text-2xl font-bold text-indigo-300">توليد المفتاح</h3>
+                    </div>
+                    <ul class="list-disc pr-6 space-y-2 text-gray-300">
+                        <li>انتقل إلى صفحة "توليد مفتاح جديد"</li>
+                        <li>انسخ المفتاح واحفظه في مكان آمن</li>
+                        <li>يمكنك إضافة تسمية للمفتاح لتسهيل التعرف عليه</li>
+                    </ul>
+                </div>
+
+                <div class="section-card p-6 rounded-xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white">2</div>
+                        <h3 class="text-2xl font-bold text-indigo-300">تشفير النص</h3>
+                    </div>
+                    <ul class="list-disc pr-6 space-y-2 text-gray-300">
+                        <li>اختر صورة مناسبة (PNG, JPG, BMP)</li>
+                        <li>أدخل النص السري أو ارفع ملف نصي</li>
+                        <li>الصق المفتاح الذي تم توليده</li>
+                        <li>انقر على زر التشفير</li>
+                        <li>احفظ الصورة</li>
+                    </ul>
+                </div>
+
+                <div class="section-card p-6 rounded-xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white">3</div>
+                        <h3 class="text-2xl font-bold text-indigo-300">فك التشفير</h3>
+                    </div>
+                    <ul class="list-disc pr-6 space-y-2 text-gray-300">
+                        <li>اختر الصورة المشفرة</li>
+                        <li>أدخل المفتاح المستخدم في التشفير</li>
+                        <li>انقر على زر الاستخراج</li>
+                        <li>سيظهر النص المستخرج في نفس الصفحة</li>
+                    </ul>
+                </div>
+
+                <div class="bg-red-900/20 p-6 rounded-xl border border-red-800/30">
+                    <div class="flex items-center gap-4 mb-4">
+                        <i class="fas fa-exclamation-triangle text-2xl text-red-400"></i>
+                        <h3 class="text-2xl font-bold text-red-400">ملاحظات هامة</h3>
+                    </div>
+                    <ul class="list-disc pr-6 space-y-2 text-red-300">
+                        <li>لا تفقد المفتاح! لا يمكن استعادة البيانات بدونه</li>
+                        <li>استخدم صورًا عالية الجودة لنتائج أفضل</li>
+                        <li>تجنب استخدام نفس الصورة للتشفير المتكرر</li>
+                    </ul>
+                </div>
+
+                <div class="bg-gray-800 p-6 rounded-xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <i class="fab fa-github text-2xl text-white"></i>
+                        <h3 class="text-2xl font-bold text-white">المصدر على GitHub</h3>
+                    </div>
+                    <p class="text-gray-300">
+                        يمكنك زيارة  المشروع على GitHub لمزيد من المعلومات والتحديثات حول نظام إخفاء النصوص باستخدام تقنية LSB.
+                    </p>
+                    <a href="https://github.com/ujjcl/LSB" target="_blank"
+                       class="inline-flex items-center mt-4 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:opacity-90 transition-all">
+                        <i class="fab fa-github ml-2"></i>
+                        زيارة المشروع
+                    </a>
+                </div>
+
+                <a href="/" 
+                   class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
+                          rounded-lg hover:opacity-90 transition-all">
+                    <i class="fas fa-arrow-left ml-2"></i>
+                    العودة للصفحة الرئيسية
+                </a>
+            </div>
+
+            
+        </div>
+
+        
+    </div>
+</body>
+</html>
+
+<script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('ServiceWorker registered'))
+        .catch(err => console.log('ServiceWorker failed: ', err));
+    }
+  </script>
